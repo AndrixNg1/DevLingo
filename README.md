@@ -1,71 +1,113 @@
-# devlingo README
+# LinguaCode
 
-This is the README for your extension "devlingo". After writing up a brief description, we recommend including the following sections.
+LinguaCode is a VS Code extension designed to make multilingual development workflows easier by translating Markdown documentation and code comments directly inside the editor.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+### Markdown Translation
 
-For example if there is an image subfolder under your extension project workspace:
+Translate Markdown files without leaving VS Code while preserving their structure and developer-specific content.
 
-\!\[feature X\]\(images/feature-x.png\)
+LinguaCode aims to preserve:
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+- Headings
+- Lists
+- Links
+- Inline code
+- Code blocks
+- Markdown formatting
 
-## Requirements
+### Comment Translation
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+Translate code comments directly from the editor using hover information without modifying the source file.
 
-## Extension Settings
+```ts
+// Fetch the currently authenticated user
+const user = await getCurrentUser();
+```
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+Hovering over the comment can display its translation directly inside VS Code.
 
-For example:
+## Goals
 
-This extension contributes the following settings:
+LinguaCode is built around a simple idea: developers should be able to understand documentation and source-code comments without constantly switching between their editor and external translation tools.
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+The project focuses on:
 
-## Known Issues
+- Developer-friendly translation
+- Non-destructive comment translation
+- Markdown-aware translation
+- Clean editor integration
+- Extensible translation providers
+- Fast and simple workflows
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+## Project Status
 
-## Release Notes
+LinguaCode is currently under active development.
 
-Users appreciate release notes as you update your extension.
+The first versions focus on building the core architecture and implementing Markdown translation.
 
-### 1.0.0
+## Roadmap
 
-Initial release of ...
+- [ ] Translate the active Markdown file
+- [ ] Select a target language
+- [ ] Preserve Markdown syntax during translation
+- [ ] Ignore fenced code blocks
+- [ ] Preserve inline code
+- [ ] Translate code comments on hover
+- [ ] Automatic source-language detection
+- [ ] Translation caching
+- [ ] Configurable translation providers
+- [ ] VS Code Marketplace release
 
-### 1.0.1
+## Development
 
-Fixed issue #.
+### Requirements
 
-### 1.1.0
+- Node.js
+- npm
+- Visual Studio Code
+- Git
 
-Added features X, Y, and Z.
+### Install
 
----
+Clone the repository and install the dependencies:
 
-## Following extension guidelines
+```bash
+git clone https://github.com/AndrixNg1/DevLingo
+cd linguacode
+npm install
+```
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+Open the project in VS Code:
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+```bash
+code .
+```
 
-## Working with Markdown
+Press `F5` to start a new Extension Development Host instance.
 
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
+## Project Structure
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
+```text
+src/
+├── commands/
+├── comments/
+├── config/
+├── hover/
+├── markdown/
+├── translation/
+│   └── providers/
+├── utils/
+└── extension.ts
+```
 
-## For more information
+## Contributing
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+LinguaCode is currently in early development.
 
-**Enjoy!**
+Issues, ideas and contributions are welcome as the project evolves.
+
+## License
+
+This project is licensed under the MIT License.

@@ -1,9 +1,25 @@
-# Change Log
+# Changelog
 
-All notable changes to the "devlingo" extension will be documented in this file.
+All notable changes to LinguaCode will be documented in this file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+The project follows Semantic Versioning.
 
 ## [Unreleased]
 
-- Initial release
+### Planned
+
+- Markdown file translation
+- Markdown syntax preservation
+- Code comment translation on hover
+- Target language configuration
+- Translation provider integration
+
+## [0.1.0-alpha.1]
+
+### Added
+
+- Initial VS Code extension project
+- TypeScript development environment
+- Initial project architecture
+- Project documentation
+- GitHub repository setup
