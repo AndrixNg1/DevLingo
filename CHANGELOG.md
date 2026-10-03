@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to LinguaCode will be documented in this file.
+All notable changes to DevLingo will be documented in this file.
 
 The project follows Semantic Versioning.
 

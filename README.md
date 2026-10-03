@@ -1,6 +1,6 @@
-# LinguaCode
+# DevLingo
 
-LinguaCode is a VS Code extension designed to make multilingual development workflows easier by translating Markdown documentation and code comments directly inside the editor.
+DevLingo is a VS Code extension designed to make multilingual development workflows easier by translating Markdown documentation and code comments directly inside the editor.
 
 ## Features
 
@@ -8,7 +8,7 @@ LinguaCode is a VS Code extension designed to make multilingual development work
 
 Translate Markdown files without leaving VS Code while preserving their structure and developer-specific content.
 
-LinguaCode aims to preserve:
+DevLingo aims to preserve:
 
 - Headings
 - Lists
@@ -30,7 +30,7 @@ Hovering over the comment can display its translation directly inside VS Code.
 
 ## Goals
 
-LinguaCode is built around a simple idea: developers should be able to understand documentation and source-code comments without constantly switching between their editor and external translation tools.
+DevLingo is built around a simple idea: developers should be able to understand documentation and source-code comments without constantly switching between their editor and external translation tools.
 
 The project focuses on:
 
@@ -43,7 +43,7 @@ The project focuses on:
 
 ## Project Status
 
-LinguaCode is currently under active development.
+DevLingo is currently under active development.
 
 The first versions focus on building the core architecture and implementing Markdown translation.
 
@@ -75,7 +75,7 @@ Clone the repository and install the dependencies:
 
 ```bash
 git clone https://github.com/AndrixNg1/DevLingo
-cd linguacode
+cd devlingo
 npm install
 ```
 
@@ -104,7 +104,7 @@ src/
 
 ## Contributing
 
-LinguaCode is currently in early development.
+DevLingo is currently in early development.
 
 Issues, ideas and contributions are welcome as the project evolves.
 
