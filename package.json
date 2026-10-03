@@ -2,7 +2,7 @@
   "name": "devlingo",
   "displayName": "DevLingo",
   "description": "Translate Markdown files and code comments directly in VS Code.",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-alpha.3",
   "engines": {
     "vscode": "^1.140.0"
   },
