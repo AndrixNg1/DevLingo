@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "devlingo.helloWorld",
-        "title": "Hello World"
+        "command": "devlingo.translateSelection",
+        "title": "DevLingo: Translate Selection"
       }
     ]
   },

@@ -45,7 +45,11 @@ The project focuses on:
 
 DevLingo is currently under active development.
 
-The first versions focus on building the core architecture and implementing Markdown translation.
+The translation foundation currently uses a development-only mock provider. No external translation service is connected yet; Markdown translation and comment hover are planned features.
+
+To try it, press `F5`, select text in the Extension Development Host, and run **DevLingo: Translate Selection** from the Command Palette. Choose English, French, Spanish, or German. The mock result (for example, `[fr] Hello world`) opens in a temporary document beside the original without modifying it.
+
+`TranslationService` depends only on `TranslationProvider`. To use another provider later, replace the provider instantiated in `src/extension.ts`; commands continue to use the same service.
 
 ## Roadmap
 
