@@ -2,13 +2,13 @@ import * as vscode from 'vscode';
 import { commentLanguageIds, extractComment } from '../comments/commentExtractor';
 import { getTargetLanguage } from '../config/settings';
 import type { TranslationService } from '../translation/translationService';
-import { HoverTranslationCache } from './hoverTranslationCache';
+import { TranslationCache } from '../translation/translationCache';
 
 export class CommentTranslationHover implements vscode.HoverProvider {
-    private readonly cache: HoverTranslationCache;
+    private readonly cache: TranslationCache;
 
     constructor(service: TranslationService) {
-        this.cache = new HoverTranslationCache(service);
+        this.cache = new TranslationCache(service);
     }
 
     async provideHover(document: vscode.TextDocument, position: vscode.Position,

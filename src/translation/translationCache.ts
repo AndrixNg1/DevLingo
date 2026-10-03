@@ -1,7 +1,7 @@
-import type { TranslationService } from '../translation/translationService';
+import type { TranslationService } from './translationService';
 
 /** Shares pending requests too; failures are evicted so the next hover can retry. */
-export class HoverTranslationCache {
+export class TranslationCache {
     private readonly entries = new Map<string, Promise<string>>();
 
     constructor(private readonly service: TranslationService, private readonly capacity = 100) {}

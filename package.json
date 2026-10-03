@@ -29,6 +29,11 @@
       {
         "command": "devlingo.translateSelection",
         "title": "DevLingo: Translate Selection"
+      },
+      {
+        "command": "devlingo.translateMarkdown",
+        "title": "Translate Markdown File",
+        "category": "DevLingo"
       }
     ],
     "configuration": {
@@ -49,7 +54,7 @@
             "German"
           ],
           "default": "fr",
-          "description": "Default target language for comment translations on hover."
+          "description": "Default target language for comment hover and Markdown file translations."
         }
       }
     }
@@ -63,17 +68,22 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.140.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "24.x",
-    "typescript-eslint": "^8.61.1",
+    "@types/vscode": "^1.140.0",
+    "@vscode/test-cli": "^0.0.15",
+    "@vscode/test-electron": "^3.0.0",
     "eslint": "^10.5.0",
     "typescript": "^6.0.3",
-    "@vscode/test-cli": "^0.0.15",
-    "@vscode/test-electron": "^3.0.0"
+    "typescript-eslint": "^8.61.1"
   },
   "overrides": {
     "diff": "^8.0.4",
     "serialize-javascript": "^7.0.6"
+  },
+  "dependencies": {
+    "mdast-util-from-markdown": "^2.1.0",
+    "mdast-util-gfm": "^3.1.0",
+    "micromark-extension-gfm": "^3.0.0"
   }
 }

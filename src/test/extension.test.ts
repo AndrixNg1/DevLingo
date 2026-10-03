@@ -8,5 +8,6 @@ suite('Extension Test Suite', () => {
 		assert.ok(extension, 'DevLingo must be available');
 		await extension.activate();
 		assert.ok((await vscode.commands.getCommands(true)).includes('devlingo.translateSelection'));
+		assert.ok((await vscode.commands.getCommands(true)).includes('devlingo.translateMarkdown'));
 	});
 });

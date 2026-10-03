@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { HoverTranslationCache } from '../hover/hoverTranslationCache';
+import { TranslationCache } from '../translation/translationCache';
 import { TranslationService } from '../translation/translationService';
 import { MockTranslationProvider } from '../translation/providers/mockTranslationProvider';
 
@@ -11,7 +11,7 @@ suite('Hover translation cache', () => {
             calls++;
             return new Promise<string>(done => { resolve = done; });
         } });
-        const cache = new HoverTranslationCache(service);
+        const cache = new TranslationCache(service);
         const first = cache.translate('Hello', 'fr');
         assert.strictEqual(cache.translate('Hello', 'fr'), first);
         assert.strictEqual(calls, 1);
@@ -23,7 +23,7 @@ suite('Hover translation cache', () => {
     test('Separates original text and target language', async () => {
         let calls = 0;
         const mock = new MockTranslationProvider();
-        const cache = new HoverTranslationCache(new TranslationService({ async translate(text, options) {
+        const cache = new TranslationCache(new TranslationService({ async translate(text, options) {
             calls++;
             return mock.translate(text, options);
         } }));
@@ -34,7 +34,7 @@ suite('Hover translation cache', () => {
     });
     test('Evicts old entries at capacity', async () => {
         let calls = 0;
-        const cache = new HoverTranslationCache(new TranslationService({ async translate(text) {
+        const cache = new TranslationCache(new TranslationService({ async translate(text) {
             calls++;
             return text;
         } }), 2);
@@ -48,7 +48,7 @@ suite('Hover translation cache', () => {
     });
     test('Retries failed requests', async () => {
         let calls = 0;
-        const cache = new HoverTranslationCache(new TranslationService({ async translate() {
+        const cache = new TranslationCache(new TranslationService({ async translate() {
             if (++calls === 1) {
                 throw new Error('Temporary failure');
             }

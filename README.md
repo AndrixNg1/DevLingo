@@ -45,7 +45,7 @@ The project focuses on:
 
 DevLingo is currently under active development.
 
-The translation foundation currently uses a development-only mock provider. No external translation service is connected yet; Markdown translation is a planned feature.
+The translation foundation currently uses a development-only mock provider. No external translation service is connected yet.
 
 To try it, press `F5`, select text in the Extension Development Host, and run **DevLingo: Translate Selection** from the Command Palette. Choose English, French, Spanish, or German. The mock result (for example, `[fr] Hello world`) opens in a temporary document beside the original without modifying it.
 
@@ -55,16 +55,26 @@ Hover over a nonempty code comment to see **DevLingo** and its mock translation 
 
 Comment hover supports JavaScript, JSX, TypeScript, TSX, Vue, PHP, CSS, SCSS, Less, Python, shell scripts, and HTML. It recognizes language-appropriate `//`, `#`, `/* */`, and `<!-- -->` comments, including multiline blocks. The MVP uses a conservative lexical scanner, not a full language parser: template-string contents and some complex embedded expressions are skipped to avoid translating normal code.
 
+### Translate a Markdown file
+
+Press `F5`, open a saved local Markdown file, and run **DevLingo: Translate Markdown File**. The command uses `devlingo.targetLanguage`, shows progress, creates a sibling file such as `README.fr.md`, and opens the result. The source file remains untouched. Existing output requires **Replace** confirmation; **Cancel** leaves it unchanged. Save or close a dirty output document before replacing it.
+
+Use `test/fixtures/markdown-sample.md` to try headings, code, links, lists, tables, frontmatter and HTML together. With target `fr`, the output is `test/fixtures/markdown-sample.fr.md`. Run the command again to check both **Cancel** and **Replace**.
+
+The Markdown parser identifies text by source offsets. Headings, lists, task lists, blockquotes, emphasis, links and table cells are translated. Code fences (including tildes), inline code, URLs, link destinations and titles, images, reference definitions, horizontal rules, YAML frontmatter, raw HTML and HTML comments are preserved. Original line endings and blank lines are retained. Hover and Markdown use the same bounded cache implementation.
+
+Provider output is escaped as Markdown prose: the source may contain `\[fr\]`, which renders as `[fr]`. No placeholders are used. For this phase, translation uses separate text segments around formatting and code, preserving shortcut/collapsed reference labels and conservatively skipping text overlapping HTML. Remote/virtual files and untitled documents are not written; save the document to a local file first. Frontmatter protection applies to a closed YAML block at the start of the document.
+
 ## Roadmap
 
-- [ ] Translate the active Markdown file
-- [ ] Select a target language
-- [ ] Preserve Markdown syntax during translation
-- [ ] Ignore fenced code blocks
-- [ ] Preserve inline code
-- [ ] Translate code comments on hover
+- [x] Translate the active Markdown file
+- [x] Select a target language
+- [x] Preserve Markdown syntax during translation
+- [x] Ignore fenced code blocks
+- [x] Preserve inline code
+- [x] Translate code comments on hover
 - [ ] Automatic source-language detection
-- [ ] Translation caching
+- [x] Translation caching
 - [ ] Configurable translation providers
 - [ ] VS Code Marketplace release
 
