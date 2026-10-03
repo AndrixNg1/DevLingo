@@ -45,11 +45,15 @@ The project focuses on:
 
 DevLingo is currently under active development.
 
-The translation foundation currently uses a development-only mock provider. No external translation service is connected yet; Markdown translation and comment hover are planned features.
+The translation foundation currently uses a development-only mock provider. No external translation service is connected yet; Markdown translation is a planned feature.
 
 To try it, press `F5`, select text in the Extension Development Host, and run **DevLingo: Translate Selection** from the Command Palette. Choose English, French, Spanish, or German. The mock result (for example, `[fr] Hello world`) opens in a temporary document beside the original without modifying it.
 
 `TranslationService` depends only on `TranslationProvider`. To use another provider later, replace the provider instantiated in `src/extension.ts`; commands continue to use the same service.
+
+Hover over a nonempty code comment to see **DevLingo** and its mock translation without modifying the file. Set `devlingo.targetLanguage` to `en`, `fr` (the default), `es`, or `de` in VS Code settings. Hover translations use a bounded in-memory cache shared across documents, keyed by comment text and target language; pending requests are reused and failures can be retried.
+
+Comment hover supports JavaScript, JSX, TypeScript, TSX, Vue, PHP, CSS, SCSS, Less, Python, shell scripts, and HTML. It recognizes language-appropriate `//`, `#`, `/* */`, and `<!-- -->` comments, including multiline blocks. The MVP uses a conservative lexical scanner, not a full language parser: template-string contents and some complex embedded expressions are skipped to avoid translating normal code.
 
 ## Roadmap
 

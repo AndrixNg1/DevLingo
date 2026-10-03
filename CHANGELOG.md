@@ -14,12 +14,12 @@ The project follows Semantic Versioning.
 - Target language configuration
 - Translation provider integration
 
-## [0.1.0-alpha.1]
+## [0.1.0-alpha.2]
 
 ### Added
 
-- Initial VS Code extension project
-- TypeScript development environment
-- Initial project architecture
-- Project documentation
-- GitHub repository setup
+- Code comment detection
+- Comment translation on hover
+- Configurable target language
+- In-memory translation cache
+- Additional translation architecture tests

@@ -2,14 +2,27 @@
   "name": "devlingo",
   "displayName": "DevLingo",
   "description": "Translate Markdown files and code comments directly in VS Code.",
-  "version": "0.0.1",
+  "version": "0.1.0-alpha.2",
   "engines": {
     "vscode": "^1.140.0"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onLanguage:javascript",
+    "onLanguage:javascriptreact",
+    "onLanguage:typescript",
+    "onLanguage:typescriptreact",
+    "onLanguage:vue",
+    "onLanguage:php",
+    "onLanguage:css",
+    "onLanguage:scss",
+    "onLanguage:less",
+    "onLanguage:python",
+    "onLanguage:shellscript",
+    "onLanguage:html"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
@@ -17,7 +30,29 @@
         "command": "devlingo.translateSelection",
         "title": "DevLingo: Translate Selection"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "DevLingo",
+      "properties": {
+        "devlingo.targetLanguage": {
+          "type": "string",
+          "enum": [
+            "en",
+            "fr",
+            "es",
+            "de"
+          ],
+          "enumDescriptions": [
+            "English",
+            "French",
+            "Spanish",
+            "German"
+          ],
+          "default": "fr",
+          "description": "Default target language for comment translations on hover."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
