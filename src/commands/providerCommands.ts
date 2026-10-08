@@ -7,7 +7,7 @@ export async function configureProviderApiKey(secrets: SecretManager): Promise<v
     try {
         const provider = await vscode.window.showQuickPick(
             getCredentialProviders().map(provider => ({ label: provider.displayName, description: provider.description, provider })),
-            { placeHolder: 'Choose a cloud provider to configure; planned providers cannot translate yet' },
+            { placeHolder: 'Choose a cloud provider to configure' },
         );
         if (!provider) {
             return;

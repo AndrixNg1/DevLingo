@@ -8,6 +8,12 @@ The project follows Semantic Versioning.
 
 ### Added
 
+- Google Cloud Translation Basic v2 provider using the official `@google-cloud/translate` SDK
+- API-key injection through the existing SecretStorage resolver and provider commands
+- Plain-text translation with automatic or explicit source language
+- Sanitized authentication, enablement, billing, quota, rate-limit, network and service errors
+- Offline Google provider, feature, credential and cache-isolation tests
+
 - Functional DeepL provider using the official `deepl-node` SDK and `translateText()`
 - Registry-based DeepL language mapping with automatic source detection and US English target
 - Controlled DeepL authentication, quota, rate-limit, connection, service and language errors
@@ -18,7 +24,7 @@ The project follows Semantic Versioning.
 - Controlled authentication, rate-limit, network, service and invalid-response errors
 - Offline provider, feature-integration, Markdown protection and cache-isolation tests
 
-- Centralized provider IDs and immutable metadata for mock and planned Google, DeepL and OpenAI providers
+- Centralized provider IDs and immutable metadata for mock, Google, DeepL and OpenAI providers
 - Provider resolver with explicit unavailable, unknown and missing-credential errors
 - SecretStorage credential manager and configure/remove credential commands
 - Available-provider selection command and `devlingo.translationProvider` setting, defaulting to mock
@@ -31,14 +37,10 @@ The project follows Semantic Versioning.
 
 ### Changed
 
-- DeepL and OpenAI are selectable alongside mock; Google remains planned
+- Google Cloud Translation, DeepL and OpenAI are selectable alongside mock
 - Translation features and caches are renewed on provider configuration and credential changes without reloading VS Code
 - Cache keys include provider identity and optional source language; each cache remains isolated to its provider lifetime
 - Reused the bounded translation cache across hover and Markdown translation
-
-### Planned
-
-- Google Cloud Translation provider integration
 
 ## [0.1.0-alpha.4]
 

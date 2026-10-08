@@ -10,12 +10,12 @@ suite('Provider registry', () => {
             assert.ok(Object.isFrozen(provider));
             assert.ok(provider.displayName.length > 0);
             assert.ok(provider.description.length > 0);
-            assert.strictEqual(provider.available, provider.id !== 'google');
+            assert.strictEqual(provider.available, true);
             assert.strictEqual(provider.requiresApiKey, provider.id !== 'mock');
         }
     });
-    test('Exposes mock, DeepL and OpenAI as available and cloud providers as requiring credentials', () => {
-        assert.deepStrictEqual(getAvailableProviders().map(provider => provider.id), ['mock', 'deepl', 'openai']);
+    test('Exposes all implemented providers as available and cloud providers as requiring credentials', () => {
+        assert.deepStrictEqual(getAvailableProviders().map(provider => provider.id), ['mock', 'google', 'deepl', 'openai']);
         assert.deepStrictEqual(getCredentialProviders().map(provider => provider.id), ['google', 'deepl', 'openai']);
     });
     test('Rejects unknown, inherited and malformed provider identifiers', () => {

@@ -2,7 +2,7 @@
   "name": "devlingo",
   "displayName": "DevLingo",
   "description": "Translate Markdown files and code comments directly in VS Code.",
-  "version": "0.1.0-alpha.4",
+  "version": "0.1.0-alpha.5",
   "engines": {
     "vscode": "^1.140.0"
   },
@@ -75,17 +75,19 @@
           "type": "string",
           "enum": [
             "mock",
+            "google",
             "deepl",
             "openai"
           ],
           "enumDescriptions": [
             "Mock Provider (Development). No external requests.",
+            "Google Cloud Translation Basic v2. Requires an API key stored through DevLingo commands.",
             "DeepL cloud translation. Requires an API key stored through DevLingo commands.",
             "OpenAI cloud translation. Requires an API key stored through DevLingo commands."
           ],
           "default": "mock",
           "scope": "application",
-          "description": "Translation provider. Mock is available offline; DeepL and OpenAI use your API key. Google remains planned."
+          "description": "Translation provider. Mock is available offline; Google Cloud Translation, DeepL and OpenAI use your API key."
         }
       }
     }
@@ -113,6 +115,7 @@
     "serialize-javascript": "^7.0.6"
   },
   "dependencies": {
+    "@google-cloud/translate": "^10.2.0",
     "deepl-node": "^1.28.0",
     "mdast-util-from-markdown": "^2.1.0",
     "mdast-util-gfm": "^3.1.0",

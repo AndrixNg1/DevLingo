@@ -45,7 +45,7 @@ The project focuses on:
 
 DevLingo is currently under active development.
 
-DevLingo supports OpenAI and DeepL cloud translation using your own API key, alongside an offline development mock. Mock remains the default; no text is sent to a cloud provider until that provider is selected.
+DevLingo supports OpenAI, DeepL and Google Cloud Translation using your own API key, alongside an offline development mock. Mock remains the default; no text is sent to a cloud provider until that provider is selected.
 
 To try it, press `F5`, select text in the Extension Development Host, and run **DevLingo: Translate Selection** from the Command Palette. Choose English, French, Spanish, or German. The mock result (for example, `[fr] Hello world`) opens in a temporary document beside the original without modifying it.
 
@@ -53,13 +53,13 @@ To try it, press `F5`, select text in the Extension Development Host, and run **
 
 ### Provider infrastructure and credentials
 
-`devlingo.translationProvider` defaults to `mock`. **DevLingo: Change Translation Provider** offers **Mock Provider (Development)**, **DeepL**, and **OpenAI**. Google Cloud Translation remains planned and unavailable.
+`devlingo.translationProvider` defaults to `mock`. **DevLingo: Change Translation Provider** offers **Mock Provider (Development)**, **Google Cloud Translation**, **DeepL**, and **OpenAI**.
 
 Use **DevLingo: Configure Provider API Key**, choose **OpenAI**, and enter your key in the masked input. Keys are trimmed and saved only through VS Code SecretStorage, under `devlingo.provider.<providerId>.apiKey`. Empty keys are rejected. Keys are never placed in settings, logged, displayed after storage or prefilled in the input. Saving a key does not perform remote validation or select a provider.
 
-**DevLingo: Remove Provider API Key** lists only providers with saved credentials and deletes the chosen entry without showing its value. Tests use in-memory storage and fake OpenAI and DeepL clients, without real API requests or credentials.
+**DevLingo: Remove Provider API Key** lists only providers with saved credentials and deletes the chosen entry without showing its value. Tests use in-memory storage and fake cloud-provider clients, without real API requests or credentials.
 
-Selecting OpenAI or DeepL without a key blocks translation with a controlled error and offers the existing configuration command. Unknown and unavailable providers never fall back to mock. Changing providers or saved credentials rebuilds translation features and caches without a reload, so stale results and old keys cannot mask the new configuration. Each cache belongs to a single provider lifetime and includes provider ID, text, target language and optional source language; pending requests are shared and failed requests can be retried.
+Selecting a cloud provider without a key blocks translation with a controlled error and offers the existing configuration command. Unknown and unavailable providers never fall back to mock. Changing providers or saved credentials rebuilds translation features and caches without a reload, so stale results and old keys cannot mask the new configuration. Each cache belongs to a single provider lifetime and includes provider ID, text, target language and optional source language; pending requests are shared and failed requests can be retried.
 
 ### Try OpenAI translation
 
@@ -92,6 +92,22 @@ The official `deepl-node` SDK constructs `DeepLClient` with the injected key and
 Keys remain exclusively in VS Code SecretStorage at `devlingo.provider.deepl.apiKey`. No remote key validation happens when saving. Missing keys offer the existing configuration flow; authentication, usage limits, rate limits, connection, service and invalid-language errors are controlled without exposing SDK details. SDK retries are disabled, requests use a 30-second timeout, and platform-information headers are disabled.
 
 Only the required text or protected Markdown prose segments are sent. No document translation, language-discovery, usage-dashboard, glossary or writing API is used. Markdown structure continues to be managed entirely by DevLingo. Automated tests use fake clients and fake credentials, with no real DeepL requests; live translation requires manual testing with your own API key and available quota.
+
+### Try Google Cloud Translation
+
+1. Press `F5` to launch the Extension Development Host.
+2. Run **DevLingo: Configure Provider API Key**, choose **Google Cloud Translation**, and enter your Google Cloud API key.
+3. Run **DevLingo: Change Translation Provider** and choose **Google Cloud Translation**.
+4. Set `devlingo.targetLanguage` to `fr`.
+5. Select `Hello, how are you?`, run **DevLingo: Translate Selection**, and choose French.
+6. Hover over `// Fetch the authenticated user`.
+7. Open a saved `README.md` and run **DevLingo: Translate Markdown File** to create `README.fr.md`.
+
+Google uses the official `@google-cloud/translate` SDK's **Basic v2** client, constructed with the injected API key. Translation calls use `format: 'text'` and the existing target codes `en`, `fr`, `es`, `de`. Automatic source detection omits `from` (no separate detection request). Explicit source codes are normalized. Empty input never triggers a request, and SDK retries are disabled.
+
+The key is saved exclusively through VS Code SecretStorage under `devlingo.provider.google.apiKey`; no service account or Advanced v3 client is configured. Requests use Google's official endpoint, without an environment-selected custom backend. No key validation request occurs on saving; missing keys offer the existing configuration flow. Structured API reasons distinguish authentication, API enablement, key restrictions, billing, quotas and rate limits. Network, service and invalid-language failures are also sanitized into domain errors without raw SDK messages or credentials. Unrecognized failures receive a generic controlled message.
+
+Only selected text, comment text or protected Markdown prose segments are sent. Google has its own provider identity in the existing cache. Markdown preservation remains managed by DevLingo, with no Google-specific parsing, document API or workspace context. Unit tests use fake clients and fake identifiers; live validation requires a Google Cloud project with Cloud Translation API enabled, billing/quota available, and an API key permitted to call it.
 
 Hover over a nonempty code comment to see **DevLingo** and its translation without modifying the file. Set `devlingo.targetLanguage` to `en`, `fr` (the default), `es`, or `de` in VS Code settings. Hover translations use a bounded in-memory cache shared across documents, keyed by comment text and target language; pending requests are reused and failures can be retried.
 

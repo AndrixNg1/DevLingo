@@ -2,6 +2,7 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 import { SecretManager } from '../config/secrets';
 import { ProviderResolver, ProviderNotConfiguredError } from '../translation/providers/providerResolver';
+import { GoogleTranslationProvider } from '../translation/providers/googleTranslationProvider';
 import { DeepLTranslationProvider } from '../translation/providers/deeplTranslationProvider';
 import { OpenAITranslationProvider } from '../translation/providers/openaiTranslationProvider';
 import { MockTranslationProvider } from '../translation/providers/mockTranslationProvider';
@@ -69,10 +70,16 @@ suite('Translation feature provider and credential lifetimes (offline)', () => {
             if (id === 'mock') {
                 return new MockTranslationProvider();
             }
-            const cloudId = id === 'deepl' ? 'deepl' : 'openai';
+            const cloudId = id === 'google' ? 'google' : id === 'deepl' ? 'deepl' : 'openai';
             const apiKey = await secrets.getApiKey(cloudId);
             if (!apiKey) {
                 throw new ProviderNotConfiguredError(cloudId);
+            }
+            if (cloudId === 'google') {
+                return new GoogleTranslationProvider({ apiKey }, { async translate() {
+                    calls++;
+                    return ['Bonjour Google'];
+                } });
             }
             if (cloudId === 'deepl') {
                 return new DeepLTranslationProvider({ apiKey }, { async translateText() {
@@ -122,7 +129,7 @@ suite('Translation feature provider and credential lifetimes (offline)', () => {
             cancellation.dispose();
         }
     });
-    for (const cloudId of ['openai', 'deepl'] as const) {
+    for (const cloudId of ['openai', 'deepl', 'google'] as const) {
         test(`Switches mock/${cloudId} without stale hover cache and refreshes saved, replaced and deleted keys`, async () => {
             registration = await registerTranslationFeatures(new OfflineResolver(secrets), secrets);
             const document = await vscode.workspace.openTextDocument({ content: '// Hello', language: 'typescript' });
@@ -167,12 +174,18 @@ suite('Translation feature provider and credential lifetimes (offline)', () => {
             }
         });
     }
-    for (const cloudId of ['openai', 'deepl'] as const) {
+    for (const cloudId of ['openai', 'deepl', 'google'] as const) {
         test(`Selection uses ${cloudId} and sends only the selected text`, async () => {
             selected = cloudId; await secrets.setApiKey(cloudId, 'test-api-key');
             const requests: unknown[] = [];
             class SelectionResolver extends ProviderResolver {
                 override async resolve() {
+                    if (cloudId === 'google') {
+                        return new GoogleTranslationProvider({ apiKey: 'test-api-key' }, { async translate(text) {
+                            requests.push(text);
+                            return ['Bonjour'];
+                        } });
+                    }
                     if (cloudId === 'deepl') {
                         return new DeepLTranslationProvider({ apiKey: 'test-api-key' }, { async translateText(text) {
                             requests.push(text);
@@ -197,7 +210,7 @@ suite('Translation feature provider and credential lifetimes (offline)', () => {
             assert.strictEqual(document.getText(), 'Hello\nUnrelated code');
         });
     }
-    for (const cloudId of ['openai', 'deepl'] as const) {
+    for (const cloudId of ['openai', 'deepl', 'google'] as const) {
         test(`${cloudId} missing credentials offer the existing configuration command`, async () => {
             selected = cloudId;
             const executed: string[] = [];

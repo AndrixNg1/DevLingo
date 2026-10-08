@@ -6,6 +6,7 @@ import { MockTranslationProvider } from '../translation/providers/mockTranslatio
 import { TranslationService } from '../translation/translationService';
 import { DeepLTranslationProvider } from '../translation/providers/deeplTranslationProvider';
 import { OpenAITranslationProvider } from '../translation/providers/openaiTranslationProvider';
+import { GoogleTranslationProvider } from '../translation/providers/googleTranslationProvider';
 import { getCredentialProviders } from '../translation/providers/providerRegistry';
 
 suite('Provider resolver', () => {
@@ -15,15 +16,15 @@ suite('Provider resolver', () => {
         assert.ok(provider instanceof MockTranslationProvider);
         assert.strictEqual(await new TranslationService(provider).translate('Hello world', { targetLanguage: 'fr' }), '[fr] Hello world');
     });
-    for (const provider of getCredentialProviders().filter(provider => !provider.available)) {
-        test(`Rejects ${provider.id} without reading credentials or falling back`, async () => {
+    for (const provider of getCredentialProviders()) {
+        test(`Rejects ${provider.id} without credentials or falling back`, async () => {
             const resolver = new ProviderResolver(new SecretManager({
-                async get() { assert.fail('Unavailable providers must not read credentials'); },
+                async get() { return undefined; },
                 async store() { assert.fail('Must not store credentials'); },
                 async delete() { assert.fail('Must not remove credentials'); },
             }));
             await assert.rejects(resolver.resolve(provider.id), (error: unknown) => {
-                assert.ok(error instanceof ProviderNotAvailableError);
+                assert.ok(error instanceof ProviderNotConfiguredError);
                 assert.strictEqual(error.providerId, provider.id);
                 assert.ok(error.message.includes(provider.displayName));
                 return true;
@@ -50,10 +51,15 @@ suite('Provider resolver', () => {
         await secrets.setApiKey('deepl', 'test-api-key');
         assert.ok(await resolver.resolve('deepl') instanceof DeepLTranslationProvider);
     });
-    test('Saved credentials do not make an unimplemented provider available', async () => {
-        const secrets = new SecretManager(new FakeSecretStorage());
+    test('Requires Google credentials and resolves the Basic v2 provider without a request', async () => {
+        const storage = new FakeSecretStorage();
+        const secrets = new SecretManager(storage);
+        const resolver = new ProviderResolver(secrets);
+        await assert.rejects(resolver.resolve('google'), ProviderNotConfiguredError);
+        storage.values.set('devlingo.provider.google.apiKey', '  ');
+        await assert.rejects(resolver.resolve('google'), ProviderNotConfiguredError);
         await secrets.setApiKey('google', 'test-api-key');
-        await assert.rejects(new ProviderResolver(secrets).resolve('google'), ProviderNotAvailableError);
+        assert.ok(await resolver.resolve('google') instanceof GoogleTranslationProvider);
     });
     test('Rejects unknown configurations without reflecting arbitrary values', async () => {
         for (const id of ['invalid', '__proto__', 'test-api-key', null, 1, {}]) {
