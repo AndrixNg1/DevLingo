@@ -1,6 +1,6 @@
 # Real DevLingo demo script
 
-Four real screenshots were captured with the installed extension and working DeepL translations. A live GIF recording was interrupted; no unreviewed recording is bundled. Use this script to record the installed DevLingo 1.0.0 extension. Screenshots must be real UI captures; translated results require a working provider configured through the normal masked input. Never fabricate output.
+Four real screenshots were captured with the installed extension and working DeepL translations. No GIF is bundled. Use this script to record the installed DevLingo 1.0.0 extension. Screenshots must be real UI captures; translated results require a working provider configured through the normal masked input. Never fabricate output.
 
 ## Prepare before recording
 

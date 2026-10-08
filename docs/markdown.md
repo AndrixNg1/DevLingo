@@ -15,6 +15,7 @@
 | Reference definitions | Keep unchanged |
 | Full reference-link labels | Translate labels; retain reference identifiers |
 | Shortcut/collapsed reference links | Keep unchanged to avoid breaking references |
+| Horizontal rules | Keep unchanged |
 | Leading YAML frontmatter | Keep unchanged when opening/closing delimiters match |
 | HTML nodes, comments and paired HTML regions | Protect content, including text inside |
 | Existing escapes, entities, indentation and line endings | Retain source syntax |
@@ -26,13 +27,13 @@ Input:
 ````markdown
 # Installation
 
-Run `npm install`.
+Run `npm install devlingo`.
 
 ```bash
 npm install devlingo
 ```
 
-Read the [documentation](https://github.com/AndrixNg1/DevLingo).
+Read the [documentation](https://example.com).
 ````
 
 Illustrative French output (not a captured provider response):
@@ -40,18 +41,20 @@ Illustrative French output (not a captured provider response):
 ````markdown
 # Installation
 
-Exécutez `npm install`.
+Exécutez `npm install devlingo`.
 
 ```bash
 npm install devlingo
 ```
 
-Consultez la [documentation](https://github.com/AndrixNg1/DevLingo).
+Consultez la [documentation](https://example.com).
 ````
+
+The inline command `npm install devlingo`, fenced code and link destination `https://example.com` remain unchanged.
 
 ## File behavior
 
-Open a saved local Markdown document and run **DevLingo: Translate Markdown File**. The target comes from `devlingo.targetLanguage`; `README.md` becomes `README.fr.md` for French. The command reads current editor content and writes a sibling file, keeping the source unchanged. Existing output needs explicit replacement confirmation; dirty output documents are not replaced. Safe file-writing logic guards against paths aliasing the source and output appearing during translation.
+Open a saved local Markdown document and run **DevLingo: Translate Markdown File**. The target comes from `devlingo.targetLanguage`; `README.md` becomes `README.fr.md` for French, and `guide.md` becomes `guide.es.md` for Spanish. The command reads current editor content and writes a sibling file, keeping the source unchanged. Existing output offers **Replace** or **Cancel**; dirty output documents must be saved or closed before replacement. Safe file-writing logic guards against paths aliasing the source and output appearing during translation.
 
 ## Limits
 

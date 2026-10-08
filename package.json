@@ -191,5 +191,9 @@
   "galleryBanner": {
     "color": "#0B1830",
     "theme": "dark"
-  }
+  },
+  "vsce": {
+    "githubBranch": "main"
+  },
+  "publisher": "andrixng"
 }

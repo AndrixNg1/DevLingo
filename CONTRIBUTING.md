@@ -4,13 +4,16 @@ Contributions are welcome. Follow the [code of conduct](CODE_OF_CONDUCT.md). For
 
 ## Workflow
 
-1. Fork [AndrixNg1/DevLingo](https://github.com/AndrixNg1/DevLingo) and clone your fork using its GitHub clone URL.
-2. Install dependencies with `npm install` (or `npm ci` for the locked dependency set).
-3. Create a branch; `feat/…`, `fix/…`, `docs/…` and `refactor/…` are suggested conventions, not enforced requirements.
-4. Implement a focused change, following the existing TypeScript and ESLint configuration.
-5. Run `npm run lint`, `npm run compile` and `npm test`.
-6. For user-facing changes, test in the Extension Development Host; for packaging/runtime changes, test a packaged VSIX when relevant.
-7. Review your diff for credentials and unrelated/generated files, then commit, push your branch and open a pull request against `main`.
+1. Fork [AndrixNg1/DevLingo](https://github.com/AndrixNg1/DevLingo).
+2. Clone your fork using its GitHub clone URL, enter the `DevLingo` directory and open it in VS Code. See [development requirements](docs/development.md#requirements).
+3. Run `npm install` (or `npm ci` for the locked dependency set).
+4. Create a branch, for example `git switch -c fix/describe-your-change`. `feat/…`, `fix/…`, `docs/…` and `refactor/…` are suggested conventions.
+5. Implement a focused change following the existing TypeScript and ESLint configuration; update documentation and meaningful tests where relevant.
+6. Run `npm run lint`.
+7. Run `npm run compile`.
+8. Run `npm test`; tests use offline fixtures and require no real API key.
+9. Press **F5 → Run Extension** and manually verify the affected workflow in the Extension Development Host. For packaging/runtime changes, also [test a packaged VSIX](docs/development.md#package-and-install).
+10. Review your diff for credentials and unrelated/generated files, commit and push your branch, then open a pull request against `main`.
 
 Describe the problem, resulting behavior, tests and limitations. Use the PR template and update docs where behavior changes. Avoid unnecessary dependencies and abstractions; tests should verify observable behavior, not mirror implementation.
 

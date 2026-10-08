@@ -36,10 +36,19 @@ For feature changes, manually check selection, comment hover and Markdown in the
 The repository has no packaging npm script. With the VS Code Extension Manager (`vsce`) available:
 
 ```sh
+vsce ls
 vsce package
-code --install-extension ./devlingo-1.0.0.vsix
+code --install-extension ./devlingo-1.0.0.vsix --force
 ```
 
-If `vsce` is not installed, invoke `npx @vscode/vsce package`. Packaging runs `vscode:prepublish`, which compiles TypeScript. Review `.vscodeignore` and the archive contents before distributing it; do not include keys, generated translations or private demo files. If files were deleted from `src`, clean their stale compiled files from `out` before packaging, since TypeScript compilation does not remove them.
+If `vsce` is not installed, install the CLI with `npm install -g @vscode/vsce` or invoke `npx @vscode/vsce package`. Packaging runs `vscode:prepublish`, which compiles TypeScript. Version 1.0.0 and publisher `andrixng` are declared in the manifest; packaging does not require publishing credentials.
 
-VSIX packaging and installed-extension testing have already been validated by the maintainer. For packaging or runtime changes, repeat the test in a normal VS Code window with the development host closed. No Marketplace publication or GitHub release is performed by these commands.
+Review `.vscodeignore` and the archive contents before distributing it; do not include keys, generated translations or private demo files. Keep `assets/icon.png` and the README's four PNG screenshots included. If files were deleted from `src`, clean their stale compiled files from `out` before packaging, since TypeScript compilation does not remove them.
+
+### README images in the installed extension
+
+`vsce` rewrites relative README image paths to HTTPS repository URLs. The manifest pins that resolution to `main`. Including a PNG in the archive does not make that remote URL available: the image must also exist on the public branch before the installed extension details page can load it.
+
+Open **Extensions → DevLingo → Details** after installing the exact VSIX. Check the icon, README, all four screenshots and badges; a successful packaging command is not a visual check. See [Marketplace readiness](marketplace.md) for the current asset-hosting blocker and validation procedure.
+
+VSIX packaging and installed translation behavior have already been validated by the maintainer. The final documentation image check is tracked separately in [Marketplace readiness](marketplace.md). For packaging or runtime changes, repeat testing in a normal VS Code window with the development host closed. No Marketplace publication or GitHub release is performed by these commands.

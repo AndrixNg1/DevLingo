@@ -17,3 +17,6 @@ out/test/**
 CONTRIBUTING.md
 CODE_OF_CONDUCT.md
 docs/assets/**
+
+# assets/icon.png and assets/marketplace/*.png are intentionally packaged.
+# README images also need publicly accessible HTTPS URLs after vsce rewrites them.

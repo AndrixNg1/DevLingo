@@ -1,78 +1,56 @@
 # Changelog
 
-All notable changes to DevLingo will be documented in this file.
-
-The project follows Semantic Versioning.
+All notable changes to DevLingo are documented here. The project follows Semantic Versioning.
 
 ## [Unreleased]
 
+No changes recorded after the prepared 1.0.0 release.
+
+## [1.0.0]
+
+DevLingo's first stable release. These release notes are prepared for publication; no public release or Git tag has been created yet.
+
 ### Added
 
-- Marketplace PNG icon using the maintainer-provided artwork
-- Four real installed-extension Marketplace screenshots: command center, providers, DeepL comment hover and Markdown translation
-- Marketplace demo recording instructions
-
-- Open-source contributor documentation and development/packaging guide
-- Architecture, provider and Markdown translation documentation
-- GitHub bug/feature issue forms and pull request template
-- MIT license and package license metadata, approved by the maintainer
-- Security policy, code of conduct and roadmap
-- Manual demo recording script and asset guidance
-
-- Native DevLingo command center launched from a theme-aware globe icon in the editor title toolbar
-- Context-aware QuickPick actions and editor context menus that reuse existing translation commands
-- Target-language picker, native settings shortcut and visible provider credential state
-- Configurable comment translation toggle, enabled by default, that suppresses inactive and pending hover results
-- Command-center construction, routing, cancellation, settings and hover-toggle tests
-
-- Google Cloud Translation Basic v2 provider using the official `@google-cloud/translate` SDK
-- API-key injection through the existing SecretStorage resolver and provider commands
-- Plain-text translation with automatic or explicit source language
-- Sanitized authentication, enablement, billing, quota, rate-limit, network and service errors
-- Offline Google provider, feature, credential and cache-isolation tests
-
-- Functional DeepL provider using the official `deepl-node` SDK and `translateText()`
-- Registry-based DeepL language mapping with automatic source detection and US English target
-- Controlled DeepL authentication, quota, rate-limit, connection, service and language errors
-- Offline DeepL provider, credential, feature and OpenAI/DeepL cache-isolation tests
-
-- Functional OpenAI translation provider using the official SDK and non-streaming Responses API
-- Centralized `gpt-5.6-luna` model with reasoning disabled, text-only prompts and automatic/explicit source language
-- Controlled authentication, rate-limit, network, service and invalid-response errors
-- Offline provider, feature-integration, Markdown protection and cache-isolation tests
-
-- Centralized provider IDs and immutable metadata for mock, Google, DeepL and OpenAI providers
-- Provider resolver with explicit unavailable, unknown and missing-credential errors
-- SecretStorage credential manager and configure/remove credential commands
-- Available-provider selection command and `devlingo.translationProvider` setting, defaulting to mock
-- Provider configuration, credential security, resolver and cache-invalidation tests
-- Markdown file translation using the existing provider-independent service and mock provider
-- Preservation of Markdown structure, code, links, images, frontmatter and HTML
-- Target-language filenames, progress notifications and automatic output opening
-- Atomic output creation and explicit confirmation before replacing existing translations
-- Markdown, filename, filesystem and command integration tests
+- Code comment translation on hover, without modifying source files
+- Selected-text translation displayed in a separate plaintext editor
+- Markdown document translation to language-suffixed sibling files
+- Markdown structure preservation for prose, code, links, images, lists, tables, frontmatter and protected HTML
+- OpenAI, DeepL and Google Cloud Translation Basic v2 providers
+- Secure API key configuration and removal through VS Code SecretStorage
+- Translation provider selection and target-language selection
+- Comment translation toggle
+- Native VS Code QuickPick command center and editor toolbar integration
+- Editor context-menu and Command Palette integration
+- Provider-aware, bounded in-memory translation caching for hover and Markdown
+- Progress notifications, safe output creation and Replace/Cancel confirmation for existing Markdown translations
+- Provider-specific authentication, quota, rate-limit, network and service error messages
+- VSIX packaging support, PNG icon and four real Marketplace screenshots
+- Offline automated tests and CI validation
+- Open-source contribution documentation and GitHub issue/PR templates
 
 ### Changed
 
-- Marketplace description, keywords, public links and icon-matched gallery banner
-- README presentation for local 1.0.0 Marketplace preparation
-- Excluded development tests and contributor-only files from VSIX packaging
+- Removed the development Mock provider from the extension; fixtures remain test-only
+- Set DeepL as the default translation provider
+- Renew translation features and caches after provider or credential changes without reloading VS Code
+- Refined credential prompts, provider selection, hover headings and Markdown progress messages
+- Made README asset paths explicit and pinned packaging link resolution to the repository's main branch
 
-- Provider pickers identify the current provider and avoid redundant selection notifications
-- Missing-key prompts offer Configure/Later and open the selected provider directly
-- Clear masked credential prompts and confirmation before removing a saved key
-- Comment hover headings include the target language and suppress results after a language change
-- Markdown progress names the source file; selection picker uses uppercase language codes
+### Security
 
-- Rewritten user-facing README with current provider, credential and installation guidance
-- Removed Mock from the extension; DeepL is the default and fixtures remain test-only
-- Distinguish OpenAI exhausted credits/quota from temporary rate limits
-- Added isolated extension debugging and disabled debugger Network view
+- Provider credentials are stored through VS Code SecretStorage, separately for each provider
+- API keys are never stored in workspace/project settings or source files
+- Providers receive only the content required for the requested translation
+- User-visible failures use controlled messages without raw SDK errors or credentials
 
-- Google Cloud Translation, DeepL and OpenAI are selectable alongside mock
-- Translation features and caches are renewed on provider configuration and credential changes without reloading VS Code
-- Cache keys include provider identity and optional source language; each cache remains isolated to its provider lifetime
-- Reused the bounded translation cache across hover and Markdown translation
+### Documentation
+
+- Complete user README covering installation, Quick Start, providers, credentials, languages, features, privacy and troubleshooting
+- Architecture, provider, Markdown preservation and development documentation
+- Contribution guidelines, code of conduct, security policy and roadmap
+- Demo recording instructions and Marketplace asset/package validation guidance
+- MIT license and accurate repository/support metadata
 
 ## [0.1.0-alpha.5]
 
