@@ -49,7 +49,17 @@ The translation foundation currently uses a development-only mock provider. No e
 
 To try it, press `F5`, select text in the Extension Development Host, and run **DevLingo: Translate Selection** from the Command Palette. Choose English, French, Spanish, or German. The mock result (for example, `[fr] Hello world`) opens in a temporary document beside the original without modifying it.
 
-`TranslationService` depends only on `TranslationProvider`. To use another provider later, replace the provider instantiated in `src/extension.ts`; commands continue to use the same service.
+`TranslationService` depends only on `TranslationProvider`. Provider metadata and construction live in `src/translation/providers/`. Future providers can be added to the registry and resolver without changing selection, hover, Markdown translation or cache logic.
+
+### Provider infrastructure and credentials
+
+`devlingo.translationProvider` defaults to `mock`. **DevLingo: Change Translation Provider** currently offers only **Mock Provider (Development)**. Google Cloud Translation, DeepL and OpenAI are registered as planned, unavailable providers; no cloud translation, SDK or HTTP request is implemented. Configuring a key does not enable these providers.
+
+Use **DevLingo: Configure Provider API Key** to prepare a cloud provider credential. Input is masked, trimmed and saved only through VS Code SecretStorage, under `devlingo.provider.<providerId>.apiKey`. Empty keys are rejected. Credentials are never placed in normal settings, displayed after storage, copied to the clipboard or logged. No remote validation occurs.
+
+**DevLingo: Remove Provider API Key** lists only providers with saved credentials and removes the selected entry without showing its value. These credential commands use the extension context's SecretStorage; tests use an in-memory fake.
+
+Manually selecting an unavailable or unknown provider produces a clear error and blocks translation instead of silently using mock results. Provider changes rebuild translation features and their caches; selecting `mock` restores them without reloading VS Code. The resolver already supports asynchronous credential checks for future available cloud providers. Provider-specific models, endpoints and API integration remain for a later phase.
 
 Hover over a nonempty code comment to see **DevLingo** and its mock translation without modifying the file. Set `devlingo.targetLanguage` to `en`, `fr` (the default), `es`, or `de` in VS Code settings. Hover translations use a bounded in-memory cache shared across documents, keyed by comment text and target language; pending requests are reused and failures can be retried.
 

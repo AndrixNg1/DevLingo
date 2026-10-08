@@ -8,6 +8,11 @@ The project follows Semantic Versioning.
 
 ### Added
 
+- Centralized provider IDs and immutable metadata for mock and planned Google, DeepL and OpenAI providers
+- Provider resolver with explicit unavailable, unknown and missing-credential errors
+- SecretStorage credential manager and configure/remove credential commands
+- Available-provider selection command and `devlingo.translationProvider` setting, defaulting to mock
+- Provider configuration, credential security, resolver and cache-invalidation tests
 - Markdown file translation using the existing provider-independent service and mock provider
 - Preservation of Markdown structure, code, links, images, frontmatter and HTML
 - Target-language filenames, progress notifications and automatic output opening
@@ -16,6 +21,7 @@ The project follows Semantic Versioning.
 
 ### Changed
 
+- Translation features and caches are renewed on provider configuration changes without reloading VS Code
 - Reused the bounded translation cache across hover and Markdown translation
 
 ### Planned
