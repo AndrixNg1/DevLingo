@@ -1,6 +1,6 @@
 # Security policy
 
-DevLingo is an alpha extension, not a stable v1.0 release. Security fixes currently target the latest development version; there is no maintenance commitment for earlier builds.
+DevLingo 1.0.0 is being prepared for its first public release. Security fixes currently target the latest development version; there is no maintenance commitment for earlier builds.
 
 ## Credentials and translated content
 

@@ -9,3 +9,11 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 **/.vscode-test.*
+
+# Development and contributor-only content
+.github/**
+test/**
+out/test/**
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+docs/assets/**

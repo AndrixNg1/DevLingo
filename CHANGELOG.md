@@ -8,6 +8,10 @@ The project follows Semantic Versioning.
 
 ### Added
 
+- Marketplace PNG icon using the maintainer-provided artwork
+- Four real installed-extension Marketplace screenshots: command center, providers, DeepL comment hover and Markdown translation
+- Marketplace demo recording instructions
+
 - Open-source contributor documentation and development/packaging guide
 - Architecture, provider and Markdown translation documentation
 - GitHub bug/feature issue forms and pull request template
@@ -49,6 +53,10 @@ The project follows Semantic Versioning.
 - Markdown, filename, filesystem and command integration tests
 
 ### Changed
+
+- Marketplace description, keywords, public links and icon-matched gallery banner
+- README presentation for local 1.0.0 Marketplace preparation
+- Excluded development tests and contributor-only files from VSIX packaging
 
 - Provider pickers identify the current provider and avoid redundant selection notifications
 - Missing-key prompts offer Configure/Later and open the selected provider directly

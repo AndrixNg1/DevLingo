@@ -8,14 +8,14 @@ Translate developer content without leaving VS Code.
 
 DevLingo translates selected text, code comments and Markdown documentation through OpenAI, DeepL or Google Cloud Translation. It uses Bring Your Own Key (BYOK) credentials, preserves protected Markdown content, and integrates with native VS Code menus.
 
-**Active development:** version `0.1.0-alpha.5` has not reached v1.0.0. DevLingo is not yet published to the VS Code Marketplace; publication is planned.
+**First release preparation:** version `1.0.0` is being prepared locally. DevLingo is not yet published to the VS Code Marketplace.
 
 ## Installation
 
 Requires VS Code **1.140.0 or later**. Install a trusted VSIX built from this repository:
 
 ```sh
-code --install-extension ./devlingo-0.1.0-alpha.5.vsix
+code --install-extension ./devlingo-1.0.0.vsix
 ```
 
 Alternatively, open **Extensions → … → Install from VSIX…** and select the file. See [development and packaging](docs/development.md) to build it yourself. VSIX packaging and installation in normal VS Code have been validated by the maintainer.
@@ -75,7 +75,27 @@ Keys are stored exclusively through **VS Code SecretStorage**, not workspace set
 
 ## Demo
 
-No recording is bundled yet. The [demo script](docs/demo-script.md) describes a real 30–60 second walkthrough, including provider configuration before recording. Once recorded and reviewed for secrets, `docs/assets/devlingo-demo.gif` can be embedded here. No screenshot or translated output is presented as a real capture without recording it.
+Real captures below show the installed extension using DeepL and French. A GIF is not bundled; the [demo script](docs/demo-script.md) gives exact recording instructions.
+
+### Translate comments on hover
+
+![DevLingo translating a TypeScript comment to French with DeepL](assets/marketplace/comment-translation.png)
+
+### Translate Markdown safely
+
+![Real French Markdown output beside the English source, with code and links retained](assets/marketplace/markdown-translation.png)
+
+### Native VS Code workflow
+
+![DevLingo command center in VS Code](assets/marketplace/command-center.png)
+
+The command center offers actions for the current editor and shows provider, target language and comment translation state. This capture shows DeepL selected with credentials configured through the secure input.
+
+### Switch translation providers
+
+![DevLingo provider picker showing Google Cloud Translation, DeepL and OpenAI](assets/marketplace/provider-selection.png)
+
+DeepL is selected in this real installed-extension capture. Each cloud provider uses your own credentials.
 
 ## Project structure
 

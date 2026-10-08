@@ -1,6 +1,6 @@
 # Roadmap
 
-DevLingo is currently an alpha extension. This roadmap describes direction, not dated delivery commitments.
+DevLingo 1.0.0 is being prepared locally for its first public release. This roadmap describes direction, not dated delivery commitments.
 
 ## Completed
 

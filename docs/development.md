@@ -37,7 +37,7 @@ The repository has no packaging npm script. With the VS Code Extension Manager (
 
 ```sh
 vsce package
-code --install-extension ./devlingo-0.1.0-alpha.5.vsix
+code --install-extension ./devlingo-1.0.0.vsix
 ```
 
 If `vsce` is not installed, invoke `npx @vscode/vsce package`. Packaging runs `vscode:prepublish`, which compiles TypeScript. Review `.vscodeignore` and the archive contents before distributing it; do not include keys, generated translations or private demo files. If files were deleted from `src`, clean their stale compiled files from `out` before packaging, since TypeScript compilation does not remove them.

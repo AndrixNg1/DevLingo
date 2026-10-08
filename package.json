@@ -2,8 +2,8 @@
   "name": "devlingo",
   "displayName": "DevLingo",
   "license": "MIT",
-  "description": "Translate Markdown files and code comments directly in VS Code.",
-  "version": "0.1.0-alpha.5",
+  "description": "Translate code comments, selected text and Markdown directly in VS Code.",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.140.0"
   },
@@ -171,5 +171,25 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/AndrixNg1/DevLingo.git"
+  },
+  "icon": "assets/icon.png",
+  "homepage": "https://github.com/AndrixNg1/DevLingo#readme",
+  "bugs": {
+    "url": "https://github.com/AndrixNg1/DevLingo/issues"
+  },
+  "keywords": [
+    "translation",
+    "translator",
+    "markdown",
+    "documentation",
+    "comments",
+    "i18n",
+    "openai",
+    "deepl",
+    "google translate"
+  ],
+  "galleryBanner": {
+    "color": "#0B1830",
+    "theme": "dark"
   }
 }
