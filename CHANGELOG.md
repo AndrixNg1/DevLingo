@@ -28,46 +28,41 @@ The project follows Semantic Versioning.
 
 - Translation provider integration
 
-## [0.1.0-alpha.3]
+## [0.1.0-alpha.4]
 
 ### Added
 
-- Markdown file translation
-- `DevLingo: Translate Markdown File` command
-- Automatic translated file generation using language suffixes
-- Markdown-aware translation pipeline
-- Translation progress notification
-- Automatic opening of translated Markdown files
-- Confirmation before replacing an existing translated file
-- Additional Markdown translation tests
-
-### Preserved
-
-Markdown translation now preserves developer-specific content and formatting, including:
-
-- Headings
-- Bold and italic formatting
-- Inline code
-- Fenced code blocks
-- Markdown links
-- URLs
-- Images
-- Ordered and unordered lists
-- Task lists
-- Blockquotes
-- Horizontal rules
-- YAML frontmatter
-- HTML blocks and comments
-- Markdown document structure
+- Multi-provider translation architecture
+- Centralized translation provider registry
+- Translation provider metadata and availability management
+- Translation provider resolver
+- Secure provider credential storage using VS Code SecretStorage
+- Provider API key configuration command
+- Provider API key removal command
+- Translation provider selection infrastructure
+- Provider-related unit tests
 
 ### Changed
 
-- Extended the translation architecture to support full Markdown documents
-- Improved separation between VS Code commands and Markdown translation logic
-- Reused the existing TranslationService and provider-independent architecture
+- DevLingo translation infrastructure is now ready to support multiple cloud providers
+- Translation provider configuration is centralized
+- TranslationService remains fully provider-independent
+- Provider-specific logic is isolated from Markdown, hover, and selection translation features
 
-### Development
+### Security
 
-DevLingo still uses the development MockTranslationProvider.
+- API credentials are stored only through VS Code SecretStorage
+- Provider credentials are never stored in settings or source files
+- Credentials are never logged or displayed after being saved
 
-A real translation provider will be introduced in a future release.
+### Providers
+
+Provider infrastructure is prepared for:
+
+- Google Cloud Translation
+- DeepL
+- OpenAI
+
+The MockTranslationProvider remains the active development provider.
+
+No external translation API is integrated in this release.
