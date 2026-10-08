@@ -4,6 +4,7 @@ import { SecretManager } from '../config/secrets';
 import { FakeSecretStorage } from './helpers/fakeSecretStorage';
 import { MockTranslationProvider } from '../translation/providers/mockTranslationProvider';
 import { TranslationService } from '../translation/translationService';
+import { OpenAITranslationProvider } from '../translation/providers/openaiTranslationProvider';
 import { getCredentialProviders } from '../translation/providers/providerRegistry';
 
 suite('Provider resolver', () => {
@@ -13,7 +14,7 @@ suite('Provider resolver', () => {
         assert.ok(provider instanceof MockTranslationProvider);
         assert.strictEqual(await new TranslationService(provider).translate('Hello world', { targetLanguage: 'fr' }), '[fr] Hello world');
     });
-    for (const provider of getCredentialProviders()) {
+    for (const provider of getCredentialProviders().filter(provider => !provider.available)) {
         test(`Rejects ${provider.id} without reading credentials or falling back`, async () => {
             const resolver = new ProviderResolver(new SecretManager({
                 async get() { assert.fail('Unavailable providers must not read credentials'); },
@@ -28,6 +29,16 @@ suite('Provider resolver', () => {
             });
         });
     }
+    test('Requires a nonempty OpenAI key without falling back to mock', async () => {
+        const storage = new FakeSecretStorage();
+        const secrets = new SecretManager(storage);
+        const resolver = new ProviderResolver(secrets);
+        await assert.rejects(resolver.resolve('openai'), ProviderNotConfiguredError);
+        storage.values.set('devlingo.provider.openai.apiKey', '  ');
+        await assert.rejects(resolver.resolve('openai'), ProviderNotConfiguredError);
+        await secrets.setApiKey('openai', 'test-api-key');
+        assert.ok(await resolver.resolve('openai') instanceof OpenAITranslationProvider);
+    });
     test('Saved credentials do not make an unimplemented provider available', async () => {
         const secrets = new SecretManager(new FakeSecretStorage());
         await secrets.setApiKey('google', 'test-api-key');

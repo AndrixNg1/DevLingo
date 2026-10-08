@@ -8,6 +8,11 @@ The project follows Semantic Versioning.
 
 ### Added
 
+- Functional OpenAI translation provider using the official SDK and non-streaming Responses API
+- Centralized `gpt-5.6-luna` model with reasoning disabled, text-only prompts and automatic/explicit source language
+- Controlled authentication, rate-limit, network, service and invalid-response errors
+- Offline provider, feature-integration, Markdown protection and cache-isolation tests
+
 - Centralized provider IDs and immutable metadata for mock and planned Google, DeepL and OpenAI providers
 - Provider resolver with explicit unavailable, unknown and missing-credential errors
 - SecretStorage credential manager and configure/remove credential commands
@@ -21,12 +26,14 @@ The project follows Semantic Versioning.
 
 ### Changed
 
-- Translation features and caches are renewed on provider configuration changes without reloading VS Code
+- OpenAI is selectable alongside mock; Google and DeepL remain planned
+- Translation features and caches are renewed on provider configuration and credential changes without reloading VS Code
+- Cache keys include optional source language; each cache remains isolated to its provider lifetime
 - Reused the bounded translation cache across hover and Markdown translation
 
 ### Planned
 
-- Translation provider integration
+- Google Cloud Translation and DeepL provider integration
 
 ## [0.1.0-alpha.4]
 

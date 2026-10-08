@@ -6,13 +6,13 @@ export class TranslationCache {
 
     constructor(private readonly service: TranslationService, private readonly capacity = 100) {}
 
-    translate(text: string, targetLanguage: string): Promise<string> {
-        const key = JSON.stringify([text, targetLanguage]);
+    translate(text: string, targetLanguage: string, sourceLanguage?: string): Promise<string> {
+        const key = JSON.stringify([text, targetLanguage, sourceLanguage]);
         const existing = this.entries.get(key);
         if (existing) {
             return existing;
         }
-        const request = this.service.translate(text, { targetLanguage }).catch(error => {
+        const request = this.service.translate(text, { targetLanguage, sourceLanguage }).catch(error => {
             if (this.entries.get(key) === request) {
                 this.entries.delete(key);
             }

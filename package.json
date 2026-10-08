@@ -74,14 +74,16 @@
         "devlingo.translationProvider": {
           "type": "string",
           "enum": [
-            "mock"
+            "mock",
+            "openai"
           ],
           "enumDescriptions": [
-            "Mock Provider (Development). Cloud providers are planned and unavailable."
+            "Mock Provider (Development). No external requests.",
+            "OpenAI cloud translation. Requires an API key stored through DevLingo commands."
           ],
           "default": "mock",
           "scope": "application",
-          "description": "Translation provider. Only the development mock is implemented. Cloud API keys can be prepared through DevLingo commands but do not activate cloud translation."
+          "description": "Translation provider. Mock is available offline; OpenAI uses your API key. Google and DeepL remain planned."
         }
       }
     }
@@ -111,6 +113,7 @@
   "dependencies": {
     "mdast-util-from-markdown": "^2.1.0",
     "mdast-util-gfm": "^3.1.0",
-    "micromark-extension-gfm": "^3.0.0"
+    "micromark-extension-gfm": "^3.0.0",
+    "openai": "^7.30.0"
   }
 }

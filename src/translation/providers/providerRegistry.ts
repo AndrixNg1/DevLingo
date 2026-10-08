@@ -2,7 +2,7 @@ export const providerRegistry = Object.freeze({
     mock: Object.freeze({ id: 'mock', displayName: 'Mock Provider (Development)', description: 'Temporary development provider; no real translation.', requiresApiKey: false, available: true }),
     google: Object.freeze({ id: 'google', displayName: 'Google Cloud Translation', description: 'Planned cloud provider; not available yet.', requiresApiKey: true, available: false }),
     deepl: Object.freeze({ id: 'deepl', displayName: 'DeepL', description: 'Planned cloud provider; not available yet.', requiresApiKey: true, available: false }),
-    openai: Object.freeze({ id: 'openai', displayName: 'OpenAI', description: 'Planned cloud provider; not available yet.', requiresApiKey: true, available: false }),
+    openai: Object.freeze({ id: 'openai', displayName: 'OpenAI', description: 'Cloud translation using your OpenAI API key.', requiresApiKey: true, available: true }),
 } as const);
 
 export type TranslationProviderId = keyof typeof providerRegistry;

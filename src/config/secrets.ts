@@ -10,7 +10,15 @@ export function getProviderSecretKey(providerId: CredentialProviderId): string {
 
 /** Credential persistence is exclusively delegated to VS Code SecretStorage. */
 export class SecretManager {
-    constructor(private readonly secrets: Pick<SecretStorage, 'get' | 'store' | 'delete'>) {}
+    constructor(private readonly secrets: Pick<SecretStorage, 'get' | 'store' | 'delete'> & Partial<Pick<SecretStorage, 'onDidChange'>>) {}
+
+    onDidChangeApiKey(listener: () => void): { dispose(): void } | undefined {
+        return this.secrets.onDidChange?.(event => {
+            if (event.key.startsWith('devlingo.provider.') && event.key.endsWith('.apiKey')) {
+                listener();
+            }
+        });
+    }
 
     async getApiKey(providerId: CredentialProviderId): Promise<string | undefined> {
         try {

@@ -7,5 +7,5 @@ import { registerTranslationFeatures } from './translation/registerTranslationFe
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
     const secrets = new SecretManager(context.secrets);
     const resolver = new ProviderResolver(secrets);
-    context.subscriptions.push(registerProviderCommands(secrets), await registerTranslationFeatures(resolver));
+    context.subscriptions.push(registerProviderCommands(secrets), await registerTranslationFeatures(resolver, secrets));
 }

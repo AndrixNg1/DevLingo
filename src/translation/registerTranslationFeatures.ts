@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import type { SecretManager } from '../config/secrets';
 import { registerTranslateMarkdownCommand } from '../commands/translateMarkdown';
 import { registerTranslateSelectionCommand } from '../commands/translateSelection';
 import { getTranslationProvider, onTranslationProviderChanged } from '../config/settings';
@@ -9,7 +10,7 @@ import type { TranslationProvider } from './types';
 import { TranslationService } from './translationService';
 
 /** Rebuild feature lifetimes on a provider change, discarding provider-specific caches. */
-export async function registerTranslationFeatures(resolver: ProviderResolver): Promise<vscode.Disposable> {
+export async function registerTranslationFeatures(resolver: ProviderResolver, secrets?: SecretManager): Promise<vscode.Disposable> {
     let features: vscode.Disposable | undefined;
     let disposed = false;
     let revision = 0;
@@ -29,7 +30,15 @@ export async function registerTranslationFeatures(resolver: ProviderResolver): P
             const message = error instanceof ProviderNotAvailableError || error instanceof ProviderNotConfiguredError
                 || error instanceof UnknownTranslationProviderError
                 ? error.message : 'DevLingo: Unable to resolve the translation provider.';
-            void vscode.window.showErrorMessage(message);
+            if (error instanceof ProviderNotConfiguredError) {
+                void vscode.window.showErrorMessage(message, 'Configure Provider API Key').then(action => {
+                    if (action && !disposed && currentRevision === revision) {
+                        void vscode.commands.executeCommand('devlingo.configureProviderApiKey');
+                    }
+                });
+            } else {
+                void vscode.window.showErrorMessage(message);
+            }
         }
         if (disposed || currentRevision !== revision) {
             return;
@@ -42,6 +51,7 @@ export async function registerTranslationFeatures(resolver: ProviderResolver): P
         );
     };
     const listener = onTranslationProviderChanged(() => { void refresh(); });
+    const credentialsListener = secrets?.onDidChangeApiKey(() => { void refresh(); });
     await refresh();
-    return new vscode.Disposable(() => { disposed = true; revision++; listener.dispose(); features?.dispose(); });
+    return new vscode.Disposable(() => { disposed = true; revision++; listener.dispose(); credentialsListener?.dispose(); features?.dispose(); });
 }

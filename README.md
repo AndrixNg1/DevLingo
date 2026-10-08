@@ -45,7 +45,7 @@ The project focuses on:
 
 DevLingo is currently under active development.
 
-The translation foundation currently uses a development-only mock provider. No external translation service is connected yet.
+DevLingo supports OpenAI cloud translation using your own API key, alongside an offline development mock. Mock remains the default; no text is sent to OpenAI until OpenAI is selected.
 
 To try it, press `F5`, select text in the Extension Development Host, and run **DevLingo: Translate Selection** from the Command Palette. Choose English, French, Spanish, or German. The mock result (for example, `[fr] Hello world`) opens in a temporary document beside the original without modifying it.
 
@@ -53,15 +53,31 @@ To try it, press `F5`, select text in the Extension Development Host, and run **
 
 ### Provider infrastructure and credentials
 
-`devlingo.translationProvider` defaults to `mock`. **DevLingo: Change Translation Provider** currently offers only **Mock Provider (Development)**. Google Cloud Translation, DeepL and OpenAI are registered as planned, unavailable providers; no cloud translation, SDK or HTTP request is implemented. Configuring a key does not enable these providers.
+`devlingo.translationProvider` defaults to `mock`. **DevLingo: Change Translation Provider** offers **Mock Provider (Development)** and **OpenAI**. Google Cloud Translation and DeepL remain planned and unavailable.
 
-Use **DevLingo: Configure Provider API Key** to prepare a cloud provider credential. Input is masked, trimmed and saved only through VS Code SecretStorage, under `devlingo.provider.<providerId>.apiKey`. Empty keys are rejected. Credentials are never placed in normal settings, displayed after storage, copied to the clipboard or logged. No remote validation occurs.
+Use **DevLingo: Configure Provider API Key**, choose **OpenAI**, and enter your key in the masked input. Keys are trimmed and saved only through VS Code SecretStorage, under `devlingo.provider.<providerId>.apiKey`. Empty keys are rejected. Keys are never placed in settings, logged, displayed after storage or prefilled in the input. Saving a key does not perform remote validation or select a provider.
 
-**DevLingo: Remove Provider API Key** lists only providers with saved credentials and removes the selected entry without showing its value. These credential commands use the extension context's SecretStorage; tests use an in-memory fake.
+**DevLingo: Remove Provider API Key** lists only providers with saved credentials and deletes the chosen entry without showing its value. Tests use in-memory storage and fake OpenAI clients, without real API requests or credentials.
 
-Manually selecting an unavailable or unknown provider produces a clear error and blocks translation instead of silently using mock results. Provider changes rebuild translation features and their caches; selecting `mock` restores them without reloading VS Code. The resolver already supports asynchronous credential checks for future available cloud providers. Provider-specific models, endpoints and API integration remain for a later phase.
+Selecting OpenAI without a key blocks translation with a controlled error and offers the existing configuration command. Unknown and unavailable providers never fall back to mock. Changing providers or saved credentials rebuilds translation features and caches without a reload, so stale results and old keys cannot mask the new configuration. Each cache belongs to a single provider lifetime and includes text, target language and optional source language; pending requests are shared and failed requests can be retried.
 
-Hover over a nonempty code comment to see **DevLingo** and its mock translation without modifying the file. Set `devlingo.targetLanguage` to `en`, `fr` (the default), `es`, or `de` in VS Code settings. Hover translations use a bounded in-memory cache shared across documents, keyed by comment text and target language; pending requests are reused and failures can be retried.
+### Try OpenAI translation
+
+1. Press `F5` to launch the Extension Development Host.
+2. Run **DevLingo: Configure Provider API Key**, choose **OpenAI**, and enter your key.
+3. Run **DevLingo: Change Translation Provider** and choose **OpenAI**.
+4. Set `devlingo.targetLanguage` to `fr`.
+5. Select `Hello, how are you?`, run **DevLingo: Translate Selection**, and choose French. Expect a natural French translation such as `Bonjour, comment allez-vous ?` in a separate document.
+6. Hover over `// Fetch the authenticated user` to see the translated comment.
+7. Open a saved `README.md` and run **DevLingo: Translate Markdown File** to create `README.fr.md` with protected formatting intact.
+
+The official `openai` SDK uses the Responses API (`client.responses.create`) with the centrally defined `gpt-5.6-luna` model and reasoning effort `none`. Requests are non-streaming, have no tools, and use `store: false`. Source language is detected automatically unless an explicit language code is supplied. Model selection is not configurable yet.
+
+Only the selected text, extracted comment, or Markdown prose segments are sent. Markdown parsing and preservation remain entirely in DevLingo's Markdown pipeline; code blocks, inline code, URLs and frontmatter are not sent for translation. Empty input never triggers a request. Hover and Markdown reuse their existing bounded caches. Selection commands intentionally translate anew when invoked.
+
+Authentication/access, rate-limit, connection, service, empty-response and unexpected errors become concise domain errors without raw SDK details or credentials. Commands display controlled error messages; hover failures remain quiet and retryable. SDK retries are disabled to avoid hidden repeated calls, and requests time out after 30 seconds. Translation quality and availability depend on OpenAI and your account's access, quota and billing. Automated validation covers fake Responses clients; real translation must be checked manually with your own key.
+
+Hover over a nonempty code comment to see **DevLingo** and its translation without modifying the file. Set `devlingo.targetLanguage` to `en`, `fr` (the default), `es`, or `de` in VS Code settings. Hover translations use a bounded in-memory cache shared across documents, keyed by comment text and target language; pending requests are reused and failures can be retried.
 
 Comment hover supports JavaScript, JSX, TypeScript, TSX, Vue, PHP, CSS, SCSS, Less, Python, shell scripts, and HTML. It recognizes language-appropriate `//`, `#`, `/* */`, and `<!-- -->` comments, including multiline blocks. The MVP uses a conservative lexical scanner, not a full language parser: template-string contents and some complex embedded expressions are skipped to avoid translating normal code.
 
@@ -83,16 +99,16 @@ Provider output is escaped as Markdown prose: the source may contain `\[fr\]`, w
 - [x] Ignore fenced code blocks
 - [x] Preserve inline code
 - [x] Translate code comments on hover
-- [ ] Automatic source-language detection
+- [x] Automatic source-language detection (OpenAI)
 - [x] Translation caching
-- [ ] Configurable translation providers
+- [x] Configurable translation providers
 - [ ] VS Code Marketplace release
 
 ## Development
 
 ### Requirements
 
-- Node.js
+- Node.js 22 or later
 - npm
 - Visual Studio Code
 - Git

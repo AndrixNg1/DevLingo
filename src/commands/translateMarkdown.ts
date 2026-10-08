@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { translationErrorMessage } from '../translation/translationError';
 import * as path from 'node:path';
 import * as fs from 'node:fs/promises';
 import { getTargetLanguage } from '../config/settings';
@@ -77,8 +78,8 @@ export async function translateMarkdownFile(translator: MarkdownTranslator): Pro
             await vscode.window.showTextDocument(output);
             await vscode.window.showInformationMessage(`DevLingo: ${path.basename(target)} created successfully.`);
         });
-    } catch {
-        await vscode.window.showErrorMessage('DevLingo: Unable to translate the Markdown file.');
+    } catch (error) {
+        await vscode.window.showErrorMessage(translationErrorMessage(error, 'DevLingo: Unable to translate the Markdown file.'));
     }
 }
 

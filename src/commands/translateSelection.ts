@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { translationErrorMessage } from '../translation/translationError';
 import { languages } from '../config/languages';
 import type { TranslationService } from '../translation/translationService';
 
@@ -25,8 +26,8 @@ export function registerTranslateSelectionCommand(service: TranslationService): 
             const result = await service.translate(text, { targetLanguage: language.code });
             const document = await vscode.workspace.openTextDocument({ content: result, language: 'plaintext' });
             await vscode.window.showTextDocument(document, { viewColumn: vscode.ViewColumn.Beside, preview: true });
-        } catch {
-            await vscode.window.showErrorMessage('DevLingo: Unable to translate the selection.');
+        } catch (error) {
+            await vscode.window.showErrorMessage(translationErrorMessage(error, 'DevLingo: Unable to translate the selection.'));
         }
     });
 }
