@@ -27,7 +27,7 @@ Alternatively, open **Extensions → … → Install from VSIX…** and select t
 3. Choose **Configure Provider API Key**, select that provider, and enter your key in the masked input.
 4. Choose **Target Language**: English (`en`), French (`fr`, default), Spanish (`es`) or German (`de`).
 
-Saving credentials does not select a provider or validate the key remotely. Provider and credential changes take effect without reloading. Missing credentials block translation and offer the configuration command. Older settings selecting the removed `mock` provider must be changed explicitly.
+Saving credentials does not select a provider or validate the key remotely. Provider and credential changes take effect without reloading. Missing credentials block translation and offer **Configure** or **Later**. Configure opens the selected provider’s masked input directly; Later keeps that provider selected without translating. Provider switches do not show a success toast. Older settings selecting the removed `mock` provider must be changed explicitly.
 
 ## Features and usage
 
@@ -71,7 +71,7 @@ Mock is no longer an extension provider; deterministic fixtures exist only in te
 
 BYOK means **Bring Your Own Key**. DevLingo does not sell or provide translation credits. Account access, quotas and billing remain between you and the provider.
 
-Keys are stored exclusively through **VS Code SecretStorage**, not workspace settings or project files. Never commit credentials or include them in issues, screenshots or logs. **Remove Provider API Key** removes a stored key. When translating, selected text, detected comments or Markdown prose fragments are sent to the selected cloud provider; consider that provider's data policies before translating sensitive content. See [security policy](SECURITY.md).
+Keys are stored exclusively through **VS Code SecretStorage**, not workspace settings or project files. Never commit credentials or include them in issues, screenshots or logs. **Remove Provider API Key** asks for confirmation before removing a stored key. When translating, selected text, detected comments or Markdown prose fragments are sent to the selected cloud provider; consider that provider's data policies before translating sensitive content. See [security policy](SECURITY.md).
 
 ## Demo
 

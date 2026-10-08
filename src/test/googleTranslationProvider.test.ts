@@ -134,7 +134,7 @@ suite('Google Translation Basic v2 provider (offline)', () => {
         const cancellation = new vscode.CancellationTokenSource();
         try {
             const result = await hover.provideHover(document, new vscode.Position(0, 4), cancellation.token);
-            const expected = new vscode.MarkdownString('**DevLingo**\n\n🌐 ');
+            const expected = new vscode.MarkdownString('**DevLingo · French**\n\n');
             expected.appendText('Bonjour Google');
             assert.strictEqual((result?.contents[0] as vscode.MarkdownString).value, expected.value);
             await hover.provideHover(document, new vscode.Position(0, 5), cancellation.token);

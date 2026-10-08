@@ -44,8 +44,8 @@ suite('Comment translation hover', function () {
             const result = await hover.provideHover(document, new vscode.Position(0, 5), token.token);
             assert.ok(result);
             const markdown = result.contents[0] as vscode.MarkdownString;
-            assert.ok(markdown.value.includes('**DevLingo**'));
-            const expected = new vscode.MarkdownString('**DevLingo**\n\n🌐 ');
+            assert.ok(markdown.value.includes('**DevLingo · French**'));
+            const expected = new vscode.MarkdownString('**DevLingo · French**\n\n');
             expected.appendText('[fr] Fetch current user');
             assert.strictEqual(markdown.value, expected.value);
             assert.strictEqual(markdown.isTrusted, undefined);
@@ -87,7 +87,7 @@ suite('Comment translation hover', function () {
         try {
             const result = await hover.provideHover(document, new vscode.Position(0, 3), token.token);
             const markdown = result?.contents[0] as vscode.MarkdownString;
-            const expected = new vscode.MarkdownString('**DevLingo**\n\n🌐 ');
+            const expected = new vscode.MarkdownString('**DevLingo · French**\n\n');
             expected.appendText('[Run](command:danger) <img src=x> **bold** `code`');
             assert.strictEqual(markdown.value, expected.value);
             assert.ok(!markdown.isTrusted);
@@ -175,7 +175,7 @@ suite('Comment translation hover', function () {
                 'vscode.executeHoverProvider', document.uri, new vscode.Position(0, 5),
             );
             assert.ok(results?.some(result => result.contents.some(content =>
-                content instanceof vscode.MarkdownString && content.value.includes('**DevLingo**')
+                content instanceof vscode.MarkdownString && content.value.includes('**DevLingo · French**')
                 && content.value.includes('Registered') && content.value.includes('hover'),
             )));
         } finally {

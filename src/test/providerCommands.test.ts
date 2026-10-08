@@ -39,6 +39,7 @@ suite('Provider commands and settings', function () {
             choices = items;
             return items.find(item => item.label === choose);
         });
+        override(vscode.window, 'showWarningMessage', async () => 'Remove');
         override(vscode.window, 'showInputBox', async (options: vscode.InputBoxOptions) => { inputOptions = options; return input; });
         await setTranslationProvider('deepl');
     });
@@ -76,7 +77,7 @@ suite('Provider commands and settings', function () {
         assert.ok(inputOptions?.validateInput?.('  '));
         assert.strictEqual(inputOptions?.validateInput?.('test-api-key'), undefined);
         assert.strictEqual(storage.values.get(getProviderSecretKey('google')), 'test-api-key');
-        assert.ok(info[0].includes('credentials saved'));
+        assert.ok(info[0].includes('API key saved securely'));
         assert.ok(!info.join(' ').includes('test-api-key'));
         assert.strictEqual(getTranslationProvider(), 'deepl');
     });
@@ -99,6 +100,23 @@ suite('Provider commands and settings', function () {
         assert.strictEqual(await secrets.getApiKey('deepl'), 'test-api-key');
         assert.strictEqual(info.length, 0);
     });
+    test('Cancelling credential removal preserves the key without a success notification', async () => {
+        await secrets.setApiKey('deepl', 'test-api-key');
+        choose = 'DeepL';
+        override(vscode.window, 'showWarningMessage', async () => 'Cancel');
+        await removeProviderApiKey(secrets);
+        assert.strictEqual(await secrets.getApiKey('deepl'), 'test-api-key');
+        assert.strictEqual(info.length, 0);
+    });
+    test('Configure action opens the named provider directly with masked input', async () => {
+        input = 'test-api-key';
+        await configureProviderApiKey(secrets, 'deepl');
+        assert.deepStrictEqual(choices, []);
+        assert.strictEqual(inputOptions?.title, 'DevLingo — DeepL');
+        assert.strictEqual(inputOptions?.prompt, 'Enter your DeepL API key.');
+        assert.strictEqual(inputOptions?.password, true);
+        assert.strictEqual(await secrets.getApiKey('deepl'), 'test-api-key');
+    });
     test('Rejects blank credentials without storing or displaying them', async () => {
         choose = 'OpenAI'; input = '  ';
         await configureProviderApiKey(secrets);
@@ -114,7 +132,7 @@ suite('Provider commands and settings', function () {
         assert.ok(!JSON.stringify(choices).includes('test-api-key'));
         assert.strictEqual(await secrets.hasApiKey('google'), false);
         assert.strictEqual(await secrets.hasApiKey('deepl'), true);
-        assert.ok(info[0].includes('credentials removed'));
+        assert.ok(info[0].includes('API key removed'));
     });
     test('Safely handles removal when no credential exists or the picker is cancelled', async () => {
         await removeProviderApiKey(secrets);
@@ -130,7 +148,7 @@ suite('Provider commands and settings', function () {
         choose = 'DeepL'; input = 'test-api-key';
         await configureProviderApiKey(broken);
         await removeProviderApiKey(broken);
-        assert.strictEqual(errors.length, 2);
+        assert.strictEqual(errors.filter(message => message.includes('Unable to save') || message.includes('Unable to remove')).length, 2);
         assert.ok(errors.every(message => !message.includes('test-api-key')));
     });
     test('Only allows selection of available providers and keeps cancellation safe', async () => {
@@ -140,7 +158,7 @@ suite('Provider commands and settings', function () {
         choose = 'DeepL';
         await changeTranslationProvider();
         assert.strictEqual(getTranslationProvider(), 'deepl');
-        assert.ok(info[0].includes('selected'));
+        assert.strictEqual(info.length, 0);
     });
     test('Rejects unavailable/unknown provider configuration without changing the setting', async () => {
         for (const id of ['unknown', '__proto__']) {

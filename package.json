@@ -167,5 +167,9 @@
     "mdast-util-gfm": "^3.1.0",
     "micromark-extension-gfm": "^3.0.0",
     "openai": "^7.30.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AndrixNg1/DevLingo.git"
   }
 }

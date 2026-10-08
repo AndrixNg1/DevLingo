@@ -50,6 +50,12 @@ The project follows Semantic Versioning.
 
 ### Changed
 
+- Provider pickers identify the current provider and avoid redundant selection notifications
+- Missing-key prompts offer Configure/Later and open the selected provider directly
+- Clear masked credential prompts and confirmation before removing a saved key
+- Comment hover headings include the target language and suppress results after a language change
+- Markdown progress names the source file; selection picker uses uppercase language codes
+
 - Rewritten user-facing README with current provider, credential and installation guidance
 - Removed Mock from the extension; DeepL is the default and fixtures remain test-only
 - Distinguish OpenAI exhausted credits/quota from temporary rate limits

@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { languages } from '../config/languages';
 import { commentLanguageIds, extractComment } from '../comments/commentExtractor';
 import { getTargetLanguage, isCommentTranslationEnabled } from '../config/settings';
 import type { TranslationService } from '../translation/translationService';
@@ -21,12 +22,14 @@ export class CommentTranslationHover implements vscode.HoverProvider {
             return undefined;
         }
         const version = document.version;
+        const targetLanguage = getTargetLanguage();
         try {
-            const translation = await this.cache.translate(comment.text, getTargetLanguage());
-            if (token.isCancellationRequested || !isCommentTranslationEnabled() || document.version !== version) {
+            const translation = await this.cache.translate(comment.text, targetLanguage);
+            if (token.isCancellationRequested || !isCommentTranslationEnabled() || document.version !== version || getTargetLanguage() !== targetLanguage) {
                 return undefined;
             }
-            const content = new vscode.MarkdownString('**DevLingo**\n\n🌐 ');
+            const language = languages.find(item => item.code === targetLanguage)!;
+            const content = new vscode.MarkdownString(`**DevLingo · ${language.label}**\n\n`);
             content.appendText(translation);
             return new vscode.Hover(content, new vscode.Range(
                 document.positionAt(comment.start), document.positionAt(comment.end),

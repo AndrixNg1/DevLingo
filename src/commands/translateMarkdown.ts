@@ -51,7 +51,7 @@ export async function translateMarkdownFile(translator: MarkdownTranslator): Pro
         const content = document.getText();
         await vscode.window.withProgress({
             location: vscode.ProgressLocation.Notification,
-            title: 'DevLingo: Translating Markdown...',
+            title: `DevLingo: Translating ${path.basename(document.uri.fsPath)}...`,
         }, async () => {
             const translated = await translator.translateMarkdown(content, targetLanguage);
             if (await aliasesOriginal(document.uri.fsPath, target)) {

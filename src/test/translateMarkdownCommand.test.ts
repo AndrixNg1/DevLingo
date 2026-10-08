@@ -48,6 +48,7 @@ suite('Translate Markdown command', function () {
         override(vscode.window, 'showTextDocument', async (document: vscode.TextDocument) => { opened.push(document.uri.fsPath); });
         override(vscode.window, 'withProgress', async (options: vscode.ProgressOptions, task: () => Promise<void>) => {
             assert.strictEqual(options.location, vscode.ProgressLocation.Notification);
+            assert.strictEqual(options.title, 'DevLingo: Translating README.md...');
             progressCount++;
             return task();
         });

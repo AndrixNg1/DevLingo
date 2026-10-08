@@ -6,6 +6,7 @@ import { getTranslationProvider, onTranslationProviderChanged } from '../config/
 import { registerCommentTranslationHover } from '../hover/commentTranslationHover';
 import { MarkdownTranslator } from '../markdown/markdownTranslator';
 import { ProviderNotAvailableError, ProviderNotConfiguredError, UnknownTranslationProviderError, type ProviderResolver } from './providers/providerResolver';
+import { getProviderMetadata } from './providers/providerRegistry';
 import type { TranslationProvider } from './types';
 import { TranslationService } from './translationService';
 
@@ -32,9 +33,9 @@ export async function registerTranslationFeatures(resolver: ProviderResolver, se
                 || error instanceof UnknownTranslationProviderError
                 ? error.message : 'DevLingo: Unable to resolve the translation provider.';
             if (error instanceof ProviderNotConfiguredError) {
-                void vscode.window.showErrorMessage(message, 'Configure Provider API Key').then(action => {
-                    if (action && !disposed && currentRevision === revision) {
-                        void vscode.commands.executeCommand('devlingo.configureProviderApiKey');
+                void vscode.window.showErrorMessage(`DevLingo: ${getProviderMetadata(error.providerId).displayName} requires an API key.`, 'Configure', 'Later').then(action => {
+                    if (action === 'Configure' && !disposed && currentRevision === revision) {
+                        void vscode.commands.executeCommand('devlingo.configureProviderApiKey', error.providerId);
                     }
                 });
             } else {

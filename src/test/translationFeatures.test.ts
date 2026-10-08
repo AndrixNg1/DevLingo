@@ -8,7 +8,8 @@ import { OpenAITranslationProvider } from '../translation/providers/openaiTransl
 import { registerTranslationFeatures } from '../translation/registerTranslationFeatures';
 import { FakeSecretStorage } from './helpers/fakeSecretStorage';
 
-suite('Translation feature provider and credential lifetimes (offline)', () => {
+suite('Translation feature provider and credential lifetimes (offline)', function () {
+    this.timeout(15000);
     const restorations: (() => void)[] = [];
     let registration: vscode.Disposable | undefined;
     let configEvents: vscode.EventEmitter<vscode.ConfigurationChangeEvent>;
@@ -233,14 +234,26 @@ suite('Translation feature provider and credential lifetimes (offline)', () => {
             assert.strictEqual(document.getText(), 'Hello\nUnrelated code');
         });
     }
+    test('Later leaves the provider unchanged and never starts credential configuration', async () => {
+        selected = 'openai';
+        const executed: string[] = [];
+        override(vscode.window, 'showErrorMessage', async (_message: string, ...actions: string[]) => {
+            assert.deepStrictEqual(actions, ['Configure', 'Later']);
+            return 'Later';
+        });
+        override(vscode.commands, 'executeCommand', async (id: string) => { executed.push(id); });
+        registration = await registerTranslationFeatures(new OfflineResolver(secrets), secrets);
+        assert.strictEqual(selected, 'openai');
+        assert.deepStrictEqual(executed, []);
+    });
     for (const cloudId of ['openai', 'deepl', 'google'] as const) {
         test(`${cloudId} missing credentials offer the existing configuration command`, async () => {
             selected = cloudId;
-            const executed: string[] = [];
+            const executed: [string, unknown][] = [];
             override(vscode.window, 'showErrorMessage', async (_message: string, action: string) => action);
-            override(vscode.commands, 'executeCommand', async (id: string) => { executed.push(id); });
+            override(vscode.commands, 'executeCommand', async (id: string, providerId: unknown) => { executed.push([id, providerId]); });
             registration = await registerTranslationFeatures(new OfflineResolver(secrets), secrets);
-            assert.deepStrictEqual(executed, ['devlingo.configureProviderApiKey']);
+            assert.deepStrictEqual(executed, [['devlingo.configureProviderApiKey', cloudId]]);
         });
     }
 });

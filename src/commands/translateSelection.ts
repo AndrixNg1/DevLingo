@@ -16,8 +16,8 @@ export function registerTranslateSelectionCommand(service: TranslationService): 
             return;
         }
         const language = await vscode.window.showQuickPick(
-            languages.map(({ label, code }) => ({ label, description: code, code })),
-            { placeHolder: 'Select a target language' },
+            languages.map(({ label, code }) => ({ label, description: code.toUpperCase(), code })),
+            { title: 'DevLingo: Translate Selection', placeHolder: 'Choose a target language' },
         );
         if (!language) {
             return;
