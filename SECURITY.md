@@ -12,7 +12,7 @@ Cloud translation sends the relevant text to the selected provider. Markdown pro
 
 ## Reporting a vulnerability
 
-Check the repository's [security reporting page](https://github.com/AndrixNg1/DevLingo/security). If GitHub offers **Report a vulnerability**, use private vulnerability reporting. Its availability has not been verified for this repository.
+Check the repository's [security reporting page](https://github.com/AndrixNg1/DevLingo/security). If GitHub offers **Report a vulnerability**, use private vulnerability reporting. GitHub reported this feature disabled for the repository when checked on 2026-10-08.
 
 If no private reporting option is available, do not open a public issue containing exploit details or credentials. You may open a minimal issue requesting a private reporting channel without sensitive details. The maintainer should configure and document a private reporting channel before Marketplace publication. No security email address or response-time guarantee is currently declared.
 

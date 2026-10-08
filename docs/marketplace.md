@@ -26,13 +26,13 @@ The original VSIX included every screenshot, and filename casing and relative pa
 https://github.com/AndrixNg1/DevLingo/raw/HEAD/assets/marketplace/comment-translation.png
 ```
 
-Those URLs returned **HTTP 404**. On 2026-10-08, the public repository's `main` branch was at `cb2c831091365e22ccd659e0a80b9353fe970730` and did not contain the `assets` directory. The local assets had not reached the public branch.
+Those URLs returned **HTTP 404**. Before the asset push on 2026-10-08, the public repository's `main` branch was at `cb2c831091365e22ccd659e0a80b9353fe970730` and did not contain the `assets` directory. The local assets had not reached the public branch.
 
 README now uses explicit `./assets/marketplace/*.png` paths. The manifest sets `vsce.githubBranch` to `main`, so a standard package resolves them against that branch. These local corrections make the intended paths unambiguous; **they do not upload the files**.
 
 The installed extension details renderer needs accessible HTTPS image sources. Packaging an image alone is insufficient. See the official [VS Code publishing documentation](https://code.visualstudio.com/api/working-with-extensions/publishing-extension#marketplace-integration).
 
-**Pending verification:** push the prepared assets to the public repository branch, then rebuild and repeat the installed README visual check. Repository hosting and Marketplace publication are separate steps. The image check must remain incomplete until all four images render.
+**Resolved on 2026-10-08:** the prepared assets and documentation were pushed to the public `main` branch in `af827a8`. All four screenshot URLs return **HTTP 200**, and the downloaded PNGs match the repository files. The icon, README, badges and all four screenshots render in the installed extension's details page. Repository hosting and Marketplace publication are separate steps; DevLingo is still unpublished on the Marketplace.
 
 ## Package and visual validation
 
@@ -60,12 +60,20 @@ Then open **Extensions → DevLingo → Details** in normal VS Code, outside the
 
 Do not mark Marketplace documentation complete while a screenshot is broken. After remote assets become accessible, rebuild the VSIX and inspect the exact build intended for distribution.
 
+### Final documentation verification
+
+- Version and publisher: **1.0.0**, **andrixng**; manifest and lockfile agree.
+- Package: icon and all four README screenshots included; approximately **7.98 MiB** compressed, with no raw video or missing GIF reference.
+- Installed view: icon, README, four badges and all four screenshots checked in normal VS Code after VSIX installation.
+- Public documentation: README, changelog, roadmap, contribution and security guides, and the linked technical/demo guides return HTTP 200.
+- Validation: lint and compilation pass; **288 tests pass**. GitHub CI also passes for the pushed documentation commit.
+
+If a network interruption leaves an image blank, restore connectivity and reload the extension details page before repeating the visual check.
+
 ## Before publication
 
-- Resolve the HTTPS asset-hosting blocker and pass the installed README visual check.
-- Verify all linked documentation is accessible on the public repository.
 - Confirm access to the `andrixng` Marketplace publisher account.
-- Confirm GitHub private vulnerability reporting or document a private reporting channel.
-- Review the final release notes, package size and visual assets.
+- Enable GitHub private vulnerability reporting or document another private reporting channel; GitHub reports it disabled as of 2026-10-08.
+- Perform the maintainer's final review of the verified VSIX and release metadata.
 
 Marketplace publication, the `v1.0.0` tag and GitHub release are separate maintainer actions after readiness checks pass. A GIF is optional and is not a release blocker.

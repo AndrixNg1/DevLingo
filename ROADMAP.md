@@ -1,6 +1,6 @@
 # Roadmap
 
-DevLingo 1.0.0 is prepared locally for its first public release. It has not been published or tagged. This roadmap describes direction, not dated delivery commitments.
+DevLingo 1.0.0 is packaged and documented for its first Marketplace release. It has not been published to the Marketplace or tagged. This roadmap describes direction, not dated delivery commitments.
 
 ## Completed
 
@@ -21,13 +21,14 @@ DevLingo 1.0.0 is prepared locally for its first public release. It has not been
 - Removal of the development Mock provider; test fixtures remain offline
 - User, architecture, provider, Markdown and development documentation
 - Contribution guidelines, security policy, MIT licensing and GitHub templates
-- Marketplace artwork: PNG icon and four real screenshots prepared locally
+- Marketplace artwork: PNG icon and four real screenshots included in the VSIX and available on the public repository
+- Installed README verification: icon, badges and all four screenshots render after the asset push
 
 ## Current phase
 
 - Marketplace preparation and final readiness review
-- Make README screenshots available over HTTPS on the public repository, then verify their rendering in the installed VSIX
-- Confirm publisher access and private security reporting availability before publication
+- Confirm publisher access before publication
+- Enable GitHub private vulnerability reporting or document another private reporting channel
 
 ## Next
 

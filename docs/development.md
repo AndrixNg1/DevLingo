@@ -49,6 +49,6 @@ Review `.vscodeignore` and the archive contents before distributing it; do not i
 
 `vsce` rewrites relative README image paths to HTTPS repository URLs. The manifest pins that resolution to `main`. Including a PNG in the archive does not make that remote URL available: the image must also exist on the public branch before the installed extension details page can load it.
 
-Open **Extensions → DevLingo → Details** after installing the exact VSIX. Check the icon, README, all four screenshots and badges; a successful packaging command is not a visual check. See [Marketplace readiness](marketplace.md) for the current asset-hosting blocker and validation procedure.
+Open **Extensions → DevLingo → Details** after installing the exact VSIX. Check the icon, README, all four screenshots and badges; a successful packaging command is not a visual check. See [Marketplace readiness](marketplace.md) for the resolved asset-hosting issue and validation procedure.
 
-VSIX packaging and installed translation behavior have already been validated by the maintainer. The final documentation image check is tracked separately in [Marketplace readiness](marketplace.md). For packaging or runtime changes, repeat testing in a normal VS Code window with the development host closed. No Marketplace publication or GitHub release is performed by these commands.
+VSIX packaging and installed translation behavior have already been validated by the maintainer. The final documentation image check passed on 2026-10-08 after the assets reached the public repository. For packaging or runtime changes, repeat testing in a normal VS Code window with the development host closed. No Marketplace publication or GitHub release is performed by these commands.
