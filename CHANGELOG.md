@@ -42,41 +42,44 @@ The project follows Semantic Versioning.
 - Cache keys include provider identity and optional source language; each cache remains isolated to its provider lifetime
 - Reused the bounded translation cache across hover and Markdown translation
 
-## [0.1.0-alpha.4]
+## [0.1.0-alpha.5]
 
 ### Added
 
-- Multi-provider translation architecture
-- Centralized translation provider registry
-- Translation provider metadata and availability management
-- Translation provider resolver
-- Secure provider credential storage using VS Code SecretStorage
-- Provider API key configuration command
-- Provider API key removal command
-- Translation provider selection infrastructure
-- Provider-related unit tests
-
-### Changed
-
-- DevLingo translation infrastructure is now ready to support multiple cloud providers
-- Translation provider configuration is centralized
-- TranslationService remains fully provider-independent
-- Provider-specific logic is isolated from Markdown, hover, and selection translation features
-
-### Security
-
-- API credentials are stored only through VS Code SecretStorage
-- Provider credentials are never stored in settings or source files
-- Credentials are never logged or displayed after being saved
+- OpenAI translation provider
+- DeepL translation provider
+- Google Cloud Translation provider
+- Secure provider credentials using VS Code SecretStorage
+- Provider-specific error handling
+- Provider-aware translation caching
+- Cloud provider selection and resolution
+- Automated tests for cloud translation providers
 
 ### Providers
 
-Provider infrastructure is prepared for:
+DevLingo now supports:
 
-- Google Cloud Translation
-- DeepL
 - OpenAI
+- DeepL
+- Google Cloud Translation
+- Mock Provider for development and testing
 
-The MockTranslationProvider remains the active development provider.
+### Security
 
-No external translation API is integrated in this release.
+- API keys are stored securely using VS Code SecretStorage
+- Credentials are never stored in workspace settings or source code
+- API keys are never exposed in logs or notifications
+
+### Changed
+
+- Translation features can now use real cloud providers
+- Translate Selection remains provider-independent
+- Comment translation remains provider-independent
+- Markdown translation remains provider-independent
+- Markdown formatting preservation continues to be handled by DevLingo
+
+### Development
+
+This release completes the initial cloud translation provider layer.
+
+The next development phase will focus on DevLingo's user experience and editor integration.
