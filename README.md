@@ -77,6 +77,10 @@ Selecting a cloud provider without a key blocks translation with a controlled er
 
 ### Try OpenAI translation
 
+An exhausted API credit balance or quota requires checking OpenAI API billing and spending limits; retrying does not replenish credits. DevLingo distinguishes these errors from temporary rate limits without exposing API error details or keys.
+
+For debugging, choose **Run Extension (isolated)** in Run and Debug to disable other installed extensions in the development host. Workspace settings disable the debugger Network view to avoid inspector errors such as `Missing dataLength in event`; normal provider HTTP requests remain enabled.
+
 1. Press `F5` to launch the Extension Development Host.
 2. Run **DevLingo: Configure Provider API Key**, choose **OpenAI**, and enter your key.
 3. Run **DevLingo: Change Translation Provider** and choose **OpenAI**.

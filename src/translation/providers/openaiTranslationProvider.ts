@@ -86,7 +86,13 @@ function languageName(code: string): string {
 
 function mapOpenAIError(error: unknown): TranslationError {
     let message = 'DevLingo: OpenAI translation failed. Try again later.';
-    if (error instanceof OpenAI.AuthenticationError || error instanceof OpenAI.PermissionDeniedError) {
+    if (error instanceof OpenAI.APIError && (
+        error.type === 'insufficient_quota'
+        || error.code === 'insufficient_quota'
+        || error.code === 'credit_balance_exhausted'
+    )) {
+        message = 'DevLingo: OpenAI API credits or quota are exhausted. Check your API billing and spending limits.';
+    } else if (error instanceof OpenAI.AuthenticationError || error instanceof OpenAI.PermissionDeniedError) {
         message = 'DevLingo: OpenAI authentication failed. Check your API key and access.';
     } else if (error instanceof OpenAI.RateLimitError) {
         message = 'DevLingo: OpenAI rate limit reached. Try again later.';
