@@ -1,6 +1,6 @@
 # Security policy
 
-DevLingo 1.0.0 is prepared locally for its first public release and is not yet published. Security fixes currently target the latest development version; there is no maintenance commitment for earlier builds.
+This policy covers **DevLingo v1.0.0, the first stable release**. No maintenance commitment is made for earlier development builds.
 
 ## Credentials and translated content
 

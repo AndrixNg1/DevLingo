@@ -1,6 +1,6 @@
 # Translation providers
 
-DevLingo implements three cloud providers. DeepL is the default; every provider needs a user-supplied API key. There is no automatic fallback. Mock was removed from the extension; tests use deterministic fixtures under `src/test/helpers/` only. Gemini is not implemented.
+DevLingo v1.0.0 supports three cloud providers. DeepL is the default; every cloud provider needs a user-supplied API key. There is no automatic fallback. Offline development and tests use mock clients and deterministic fixtures under `src/test/helpers/`.
 
 Configure keys with **DevLingo → Configure Provider API Key → provider → masked input**, then select the provider through **Translation Provider**. SecretStorage is the sole credential persistence mechanism. Credentials are not prefilled, logged or saved in settings. Saving a key does not make an API request. Billing and credits belong to your provider account; this document does not quote prices.
 
@@ -25,6 +25,12 @@ Uses the official `@google-cloud/translate` SDK, Cloud Translation **Basic v2** 
 ## Shared boundaries
 
 Concrete providers implement [`TranslationProvider`](../src/translation/types.ts). Requests time out after 30 seconds and SDK retries are disabled. Errors exposed to users are controlled domain messages, without raw SDK details or credentials. Selection and Markdown commands display failures; hover remains quiet and retries on a later hover. These are implementation details, not guarantees about external service availability.
+
+## Mock providers for development and testing
+
+[`FixtureTranslationProvider`](../src/test/helpers/fixtureTranslationProvider.ts) is a deterministic mock that implements `TranslationProvider` and returns `[targetLanguage] original text`. Tests inject it directly to exercise features without credentials or network requests. Provider tests also inject fake SDK clients.
+
+The fixture is test-only, is excluded from VSIX packaging with `out/test/**`, and is not registered as a selectable provider in DevLingo v1.0.0. New fixtures should use the same contract and stay under `src/test/helpers/`.
 
 ## Adding a new provider
 

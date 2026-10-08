@@ -11,7 +11,7 @@ DevLingo is a VS Code extension that translates **code comments, selected text a
 
 It supports **OpenAI, DeepL and Google Cloud Translation** through a **Bring Your Own Key (BYOK)** model. Choose a provider, configure your own API key, and start translating from native VS Code menus.
 
-**Release status:** v1.0.0 is prepared locally and has not been published. Marketplace installation will be available after the public release.
+**DevLingo v1.0.0 is the first stable release.** Install it from a trusted VSIX package. VS Code Marketplace publication is the next distribution step.
 
 ## Quick Start
 
@@ -36,7 +36,7 @@ code --install-extension devlingo-1.0.0.vsix
 
 Alternatively, open **VS Code → Extensions → … → Install from VSIX…** and select the file. To replace a previous local build, add `--force` to the command above.
 
-**Marketplace installation will be available after the public release.** There is currently no public Marketplace installation link.
+**DevLingo is not yet published to the VS Code Marketplace.** Marketplace publication is the next distribution step.
 
 ## Features
 
@@ -268,7 +268,7 @@ Check that **Comment Translation** is enabled, the correct provider is selected 
 
 ### Provider unavailable
 
-Check your network, the provider's API service and account configuration. For Google Cloud, verify Cloud Translation Basic v2 is enabled and the API key restrictions allow it. If an older setting refers to the removed development provider, select a supported provider explicitly.
+Check your network, the provider's API service and account configuration. For Google Cloud, verify Cloud Translation Basic v2 is enabled and the API key restrictions allow it. If the provider setting contains an unsupported value, select OpenAI, DeepL or Google Cloud Translation explicitly.
 
 If the problem persists, open a [GitHub issue](https://github.com/AndrixNg1/DevLingo/issues/new/choose) with your VS Code/DevLingo versions, provider name and a minimal non-sensitive reproduction. Never include an API key.
 
@@ -299,6 +299,8 @@ npm test
 
 Open the repository in VS Code, press **F5**, and select **Run Extension** to launch an Extension Development Host. Tests use offline fixtures and injected clients, without real API keys. See [development and packaging](docs/development.md) for headless Linux testing and VSIX validation.
 
+The development/test mock is a deterministic fixture used by offline tests. See [mock providers for development and testing](docs/providers.md#mock-providers-for-development-and-testing); it is not selectable in the installed extension.
+
 ### Project structure
 
 ```text
@@ -327,7 +329,19 @@ src/
 
 ## Contributing
 
-Contributions are welcome: bug fixes, translation providers, language support, Markdown edge cases, documentation and UX improvements. Start with [CONTRIBUTING.md](CONTRIBUTING.md) and follow the [code of conduct](CODE_OF_CONDUCT.md).
+Contributions are welcome: bug fixes, translation providers, language support, Markdown edge cases, documentation, UX improvements and tests. Start with [CONTRIBUTING.md](CONTRIBUTING.md) and follow the [code of conduct](CODE_OF_CONDUCT.md).
+
+## Author
+
+Connect with **Andrix Ngoyi**:
+
+[![GitHub][github-profile-badge]](https://github.com/AndrixNg1)
+[![LinkedIn][linkedin-profile-badge]](https://www.linkedin.com/in/andrix-ngoyi-469662321/)
+[![Portfolio][portfolio-badge]](https://andrixngoyi.vercel.app)
+
+[github-profile-badge]: https://img.shields.io/badge/GitHub-AndrixNg1-181717?logo=github&logoColor=white
+[linkedin-profile-badge]: https://img.shields.io/badge/LinkedIn-Andrix_Ngoyi-0A66C2?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyBmaWxsPSJ3aGl0ZSIgcm9sZT0iaW1nIiB2aWV3Qm94PSIwIDAgMjQgMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPHBhdGggZD0iTTIwLjQ0NyAyMC40NTJoLTMuNTU0di01LjU2OWMwLTEuMzI4LS4wMjctMy4wMzctMS44NTItMy4wMzctMS44NTMgMC0yLjEzNiAxLjQ0NS0yLjEzNiAyLjkzOXY1LjY2N0g5LjM1MVY5aDMuNDE0djEuNTYxaC4wNDZjLjQ3Ny0uOSAxLjYzNy0xLjg1IDMuMzctMS44NSAzLjYwMSAwIDQuMjY3IDIuMzcgNC4yNjcgNS40NTV2Ni4yODZ6TTUuMzM3IDcuNDMzYy0xLjE0NCAwLTIuMDYzLS45MjYtMi4wNjMtMi4wNjUgMC0xLjEzOC45Mi0yLjA2MyAyLjA2My0yLjA2MyAxLjE0IDAgMi4wNjQuOTI1IDIuMDY0IDIuMDYzIDAgMS4xMzktLjkyNSAyLjA2NS0yLjA2NCAyLjA2NXptMS43ODIgMTMuMDE5SDMuNTU1VjloMy41NjR2MTEuNDUyek0yMi4yMjUgMEgxLjc3MUMuNzkyIDAgMCAuNzc0IDAgMS43Mjl2MjAuNTQyQzAgMjMuMjI3Ljc5MiAyNCAxLjc3MSAyNGgyMC40NTFDMjMuMiAyNCAyNCAyMy4yMjcgMjQgMjIuMjcxVjEuNzI5QzI0IC43NzQgMjMuMiAwIDIyLjIyMiAwaC4wMDN6Ii8%2BPC9zdmc%2B
+[portfolio-badge]: https://img.shields.io/badge/Portfolio-andrixngoyi.vercel.app-000000?logo=vercel&logoColor=white
 
 ## Support
 

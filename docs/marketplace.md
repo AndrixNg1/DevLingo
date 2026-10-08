@@ -1,6 +1,6 @@
 # Marketplace preparation
 
-DevLingo is version **1.0.0**, publisher **andrixng**, and is not yet published. The manifest and lockfile version must remain 1.0.0 during this preparation. No Git tag or GitHub release has been created.
+**DevLingo v1.0.0 is the first stable release**, with publisher **andrixng**. It has not been published to the VS Code Marketplace. The manifest and lockfile remain at version 1.0.0. The maintainer handles final validation and Git/GitHub release operations separately from documentation preparation.
 
 ## Prepared assets and metadata
 
@@ -34,9 +34,9 @@ The installed extension details renderer needs accessible HTTPS image sources. P
 
 **Resolved on 2026-10-08:** the prepared assets and documentation were pushed to the public `main` branch in `af827a8`. All four screenshot URLs return **HTTP 200**, and the downloaded PNGs match the repository files. The icon, README, badges and all four screenshots render in the installed extension's details page. Repository hosting and Marketplace publication are separate steps; DevLingo is still unpublished on the Marketplace.
 
-## Package and visual validation
+## Maintainer package and visual validation
 
-Run from the repository root:
+The following commands are for the maintainer's final validation or future packaging changes; a documentation-only preparation pass does not execute them. Run from the repository root:
 
 ```sh
 npm run lint
@@ -60,13 +60,15 @@ Then open **Extensions → DevLingo → Details** in normal VS Code, outside the
 
 Do not mark Marketplace documentation complete while a screenshot is broken. After remote assets become accessible, rebuild the VSIX and inspect the exact build intended for distribution.
 
-### Final documentation verification
+### Development validation record (2026-10-08)
 
 - Version and publisher: **1.0.0**, **andrixng**; manifest and lockfile agree.
-- Package: icon and all four README screenshots included; approximately **7.98 MiB** compressed, with no raw video or missing GIF reference.
-- Installed view: icon, README, four badges and all four screenshots checked in normal VS Code after VSIX installation.
-- Public documentation: README, changelog, roadmap, contribution and security guides, and the linked technical/demo guides return HTTP 200.
-- Validation: lint and compilation pass; **288 tests pass**. GitHub CI also passes for the pushed documentation commit.
+- Package checked during development: icon and all four README screenshots included; approximately **7.98 MiB** compressed, with no raw video or missing GIF reference.
+- Installed view checked during development: icon, README, four badges and all four screenshots rendered in normal VS Code after VSIX installation.
+- Public documentation at that check: README, changelog, roadmap, contribution and security guides, and the linked technical/demo guides returned HTTP 200.
+- Development validation: lint and compilation passed; **288 tests passed**. GitHub CI passed for the pushed documentation commits.
+
+These are prior development results, not validation performed during final documentation preparation. The maintainer performs final validation manually. A distribution package must include the final documentation; rebuild it through the maintainer's normal packaging workflow if the existing VSIX predates those edits.
 
 If a network interruption leaves an image blank, restore connectivity and reload the extension details page before repeating the visual check.
 
@@ -76,4 +78,4 @@ If a network interruption leaves an image blank, restore connectivity and reload
 - Enable GitHub private vulnerability reporting or document another private reporting channel; GitHub reports it disabled as of 2026-10-08.
 - Perform the maintainer's final review of the verified VSIX and release metadata.
 
-Marketplace publication, the `v1.0.0` tag and GitHub release are separate maintainer actions after readiness checks pass. A GIF is optional and is not a release blocker.
+The maintainer creates and pushes the `v1.0.0` tag and GitHub Release after final validation. VS Code Marketplace preparation and publication follow as a separate distribution step. A GIF is optional and is not a release blocker.

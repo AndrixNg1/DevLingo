@@ -1,6 +1,6 @@
 # Roadmap
 
-DevLingo 1.0.0 is packaged and documented for its first Marketplace release. It has not been published to the Marketplace or tagged. This roadmap describes direction, not dated delivery commitments.
+DevLingo v1.0.0 is the first stable release. Final release preparation is in progress; VS Code Marketplace publication has not been performed. This roadmap describes direction, not dated delivery commitments.
 
 ## Completed
 
@@ -14,26 +14,28 @@ DevLingo 1.0.0 is packaged and documented for its first Marketplace release. It 
 - Secure credentials through VS Code SecretStorage
 - Provider selector and provider-isolated translation caches
 - Native command center, editor toolbar and context menus
-- Command Palette integration, target-language selection and comment translation toggle
+- Command Palette integration
+- Target-language configuration and selection
+- Comment translation toggle
 - UX polish for credentials, provider switching, hover and Markdown output
-- Automated lint, compile and offline tests
+- Automated lint, compile, offline tests and CI established during development
 - VSIX packaging and installed-extension testing, validated by the maintainer
-- Removal of the development Mock provider; test fixtures remain offline
+- Offline development/test mock fixtures; the installed extension offers three cloud providers
 - User, architecture, provider, Markdown and development documentation
 - Contribution guidelines, security policy, MIT licensing and GitHub templates
 - Marketplace artwork: PNG icon and four real screenshots included in the VSIX and available on the public repository
 - Installed README verification: icon, badges and all four screenshots render after the asset push
+- Final v1.0.0 user and technical documentation
 
 ## Current phase
 
-- Marketplace preparation and final readiness review
-- Confirm publisher access before publication
-- Enable GitHub private vulnerability reporting or document another private reporting channel
+- Final v1.0.0 release preparation
+- Maintainer performs final validation, commit, push, annotated Git tag and GitHub Release
 
 ## Next
 
-- Marketplace publication after readiness checks pass
-- Create the `v1.0.0` Git tag and GitHub release with the verified VSIX
+- VS Code Marketplace preparation: confirm publisher access and configure private vulnerability reporting
+- VS Code Marketplace publication
 
 ## Future ideas
 
