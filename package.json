@@ -75,15 +75,17 @@
           "type": "string",
           "enum": [
             "mock",
+            "deepl",
             "openai"
           ],
           "enumDescriptions": [
             "Mock Provider (Development). No external requests.",
+            "DeepL cloud translation. Requires an API key stored through DevLingo commands.",
             "OpenAI cloud translation. Requires an API key stored through DevLingo commands."
           ],
           "default": "mock",
           "scope": "application",
-          "description": "Translation provider. Mock is available offline; OpenAI uses your API key. Google and DeepL remain planned."
+          "description": "Translation provider. Mock is available offline; DeepL and OpenAI use your API key. Google remains planned."
         }
       }
     }
@@ -111,6 +113,7 @@
     "serialize-javascript": "^7.0.6"
   },
   "dependencies": {
+    "deepl-node": "^1.28.0",
     "mdast-util-from-markdown": "^2.1.0",
     "mdast-util-gfm": "^3.1.0",
     "micromark-extension-gfm": "^3.0.0",

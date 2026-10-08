@@ -67,7 +67,7 @@ suite('Provider commands and settings', function () {
         choose = 'Google Cloud Translation'; input = ' test-api-key ';
         await configureProviderApiKey(secrets);
         assert.deepStrictEqual(choices.map(item => item.label), getCredentialProviders().map(provider => provider.displayName));
-        assert.ok(choices.filter(item => item.label !== 'OpenAI').every(item => item.description?.includes('not available')));
+        assert.ok(choices.filter(item => item.label === 'Google Cloud Translation').every(item => item.description?.includes('not available')));
         assert.ok(choices.find(item => item.label === 'OpenAI')?.description?.includes('OpenAI API key'));
         assert.strictEqual(inputOptions?.password, true);
         assert.strictEqual(inputOptions?.ignoreFocusOut, true);
@@ -79,6 +79,16 @@ suite('Provider commands and settings', function () {
         assert.ok(info[0].includes('credentials saved'));
         assert.ok(!info.join(' ').includes('test-api-key'));
         assert.strictEqual(getTranslationProvider(), 'mock');
+    });
+    test('Configures DeepL credentials through the existing secure command', async () => {
+        choose = 'DeepL'; input = ' test-api-key ';
+        await configureProviderApiKey(secrets);
+        assert.strictEqual(inputOptions?.password, true);
+        assert.strictEqual(inputOptions?.value, undefined);
+        assert.ok(!inputOptions?.prompt?.includes('not active'));
+        assert.strictEqual(storage.values.get(getProviderSecretKey('deepl')), 'test-api-key');
+        assert.ok(!info.join(' ').includes('test-api-key'));
+        assert.ok(!info.join(' ').includes('not available'));
     });
     test('Cancellation leaves existing credentials intact', async () => {
         await secrets.setApiKey('deepl', 'test-api-key');
@@ -125,7 +135,7 @@ suite('Provider commands and settings', function () {
     });
     test('Only allows selection of available providers and keeps cancellation safe', async () => {
         await changeTranslationProvider();
-        assert.deepStrictEqual(choices.map(item => item.label), ['Mock Provider (Development)', 'OpenAI']);
+        assert.deepStrictEqual(choices.map(item => item.label), ['Mock Provider (Development)', 'DeepL', 'OpenAI']);
         assert.strictEqual(info.length, 0);
         choose = 'Mock Provider (Development)';
         await changeTranslationProvider();
@@ -133,7 +143,7 @@ suite('Provider commands and settings', function () {
         assert.ok(info[0].includes('selected'));
     });
     test('Rejects unavailable/unknown provider configuration without changing the setting', async () => {
-        for (const id of ['google', 'deepl', 'unknown']) {
+        for (const id of ['google', 'unknown']) {
             await assert.rejects(setTranslationProvider(id as TranslationProviderId), /not available/);
             assert.strictEqual(getTranslationProvider(), 'mock');
         }

@@ -18,9 +18,10 @@ export async function registerTranslationFeatures(resolver: ProviderResolver, se
         const currentRevision = ++revision;
         features?.dispose();
         features = undefined;
+        const configuredProvider = getTranslationProvider();
         let provider: TranslationProvider;
         try {
-            provider = await resolver.resolve(getTranslationProvider());
+            provider = await resolver.resolve(configuredProvider);
         } catch (error) {
             if (disposed || currentRevision !== revision) {
                 return;
@@ -43,7 +44,7 @@ export async function registerTranslationFeatures(resolver: ProviderResolver, se
         if (disposed || currentRevision !== revision) {
             return;
         }
-        const service = new TranslationService(provider);
+        const service = new TranslationService(provider, typeof configuredProvider === 'string' ? configuredProvider : 'unknown');
         features = vscode.Disposable.from(
             registerTranslateSelectionCommand(service),
             registerTranslateMarkdownCommand(new MarkdownTranslator(service)),

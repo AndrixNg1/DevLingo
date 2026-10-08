@@ -45,7 +45,7 @@ The project focuses on:
 
 DevLingo is currently under active development.
 
-DevLingo supports OpenAI cloud translation using your own API key, alongside an offline development mock. Mock remains the default; no text is sent to OpenAI until OpenAI is selected.
+DevLingo supports OpenAI and DeepL cloud translation using your own API key, alongside an offline development mock. Mock remains the default; no text is sent to a cloud provider until that provider is selected.
 
 To try it, press `F5`, select text in the Extension Development Host, and run **DevLingo: Translate Selection** from the Command Palette. Choose English, French, Spanish, or German. The mock result (for example, `[fr] Hello world`) opens in a temporary document beside the original without modifying it.
 
@@ -53,13 +53,13 @@ To try it, press `F5`, select text in the Extension Development Host, and run **
 
 ### Provider infrastructure and credentials
 
-`devlingo.translationProvider` defaults to `mock`. **DevLingo: Change Translation Provider** offers **Mock Provider (Development)** and **OpenAI**. Google Cloud Translation and DeepL remain planned and unavailable.
+`devlingo.translationProvider` defaults to `mock`. **DevLingo: Change Translation Provider** offers **Mock Provider (Development)**, **DeepL**, and **OpenAI**. Google Cloud Translation remains planned and unavailable.
 
 Use **DevLingo: Configure Provider API Key**, choose **OpenAI**, and enter your key in the masked input. Keys are trimmed and saved only through VS Code SecretStorage, under `devlingo.provider.<providerId>.apiKey`. Empty keys are rejected. Keys are never placed in settings, logged, displayed after storage or prefilled in the input. Saving a key does not perform remote validation or select a provider.
 
-**DevLingo: Remove Provider API Key** lists only providers with saved credentials and deletes the chosen entry without showing its value. Tests use in-memory storage and fake OpenAI clients, without real API requests or credentials.
+**DevLingo: Remove Provider API Key** lists only providers with saved credentials and deletes the chosen entry without showing its value. Tests use in-memory storage and fake OpenAI and DeepL clients, without real API requests or credentials.
 
-Selecting OpenAI without a key blocks translation with a controlled error and offers the existing configuration command. Unknown and unavailable providers never fall back to mock. Changing providers or saved credentials rebuilds translation features and caches without a reload, so stale results and old keys cannot mask the new configuration. Each cache belongs to a single provider lifetime and includes text, target language and optional source language; pending requests are shared and failed requests can be retried.
+Selecting OpenAI or DeepL without a key blocks translation with a controlled error and offers the existing configuration command. Unknown and unavailable providers never fall back to mock. Changing providers or saved credentials rebuilds translation features and caches without a reload, so stale results and old keys cannot mask the new configuration. Each cache belongs to a single provider lifetime and includes provider ID, text, target language and optional source language; pending requests are shared and failed requests can be retried.
 
 ### Try OpenAI translation
 
@@ -76,6 +76,22 @@ The official `openai` SDK uses the Responses API (`client.responses.create`) wit
 Only the selected text, extracted comment, or Markdown prose segments are sent. Markdown parsing and preservation remain entirely in DevLingo's Markdown pipeline; code blocks, inline code, URLs and frontmatter are not sent for translation. Empty input never triggers a request. Hover and Markdown reuse their existing bounded caches. Selection commands intentionally translate anew when invoked.
 
 Authentication/access, rate-limit, connection, service, empty-response and unexpected errors become concise domain errors without raw SDK details or credentials. Commands display controlled error messages; hover failures remain quiet and retryable. SDK retries are disabled to avoid hidden repeated calls, and requests time out after 30 seconds. Translation quality and availability depend on OpenAI and your account's access, quota and billing. Automated validation covers fake Responses clients; real translation must be checked manually with your own key.
+
+### Try DeepL translation
+
+1. Press `F5` to launch the Extension Development Host.
+2. Run **DevLingo: Configure Provider API Key**, choose **DeepL**, and enter your DeepL API key.
+3. Run **DevLingo: Change Translation Provider** and select **DeepL**.
+4. Set `devlingo.targetLanguage` to `fr`.
+5. Select `Hello, how are you?`, run **DevLingo: Translate Selection**, and choose French.
+6. Hover over `// Fetch the authenticated user`.
+7. Open a saved `README.md` and run **DevLingo: Translate Markdown File** to create `README.fr.md`.
+
+The official `deepl-node` SDK constructs `DeepLClient` with the injected key and calls only `translateText()` with `preserveFormatting: true`. It selects the API Free or Pro endpoint from the key. Automatic source detection uses `null`; explicit source codes are normalized and validated by DeepL. Targets reuse the supported-language registry, with only English mapped to `en-US` (French, German and Spanish keep their codes).
+
+Keys remain exclusively in VS Code SecretStorage at `devlingo.provider.deepl.apiKey`. No remote key validation happens when saving. Missing keys offer the existing configuration flow; authentication, usage limits, rate limits, connection, service and invalid-language errors are controlled without exposing SDK details. SDK retries are disabled, requests use a 30-second timeout, and platform-information headers are disabled.
+
+Only the required text or protected Markdown prose segments are sent. No document translation, language-discovery, usage-dashboard, glossary or writing API is used. Markdown structure continues to be managed entirely by DevLingo. Automated tests use fake clients and fake credentials, with no real DeepL requests; live translation requires manual testing with your own API key and available quota.
 
 Hover over a nonempty code comment to see **DevLingo** and its translation without modifying the file. Set `devlingo.targetLanguage` to `en`, `fr` (the default), `es`, or `de` in VS Code settings. Hover translations use a bounded in-memory cache shared across documents, keyed by comment text and target language; pending requests are reused and failures can be retried.
 

@@ -1,7 +1,7 @@
 import type { TranslationOptions, TranslationProvider } from './types';
 
 export class TranslationService {
-    constructor(private readonly provider: TranslationProvider) {}
+    constructor(private readonly provider: TranslationProvider, readonly providerId = 'custom') {}
 
     async translate(text: string, options: TranslationOptions): Promise<string> {
         if (text.trim().length === 0) {

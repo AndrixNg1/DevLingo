@@ -4,6 +4,7 @@ import { SecretManager } from '../config/secrets';
 import { FakeSecretStorage } from './helpers/fakeSecretStorage';
 import { MockTranslationProvider } from '../translation/providers/mockTranslationProvider';
 import { TranslationService } from '../translation/translationService';
+import { DeepLTranslationProvider } from '../translation/providers/deeplTranslationProvider';
 import { OpenAITranslationProvider } from '../translation/providers/openaiTranslationProvider';
 import { getCredentialProviders } from '../translation/providers/providerRegistry';
 
@@ -38,6 +39,16 @@ suite('Provider resolver', () => {
         await assert.rejects(resolver.resolve('openai'), ProviderNotConfiguredError);
         await secrets.setApiKey('openai', 'test-api-key');
         assert.ok(await resolver.resolve('openai') instanceof OpenAITranslationProvider);
+    });
+    test('Requires DeepL credentials and resolves it without a network request', async () => {
+        const storage = new FakeSecretStorage();
+        const secrets = new SecretManager(storage);
+        const resolver = new ProviderResolver(secrets);
+        await assert.rejects(resolver.resolve('deepl'), ProviderNotConfiguredError);
+        storage.values.set('devlingo.provider.deepl.apiKey', '  ');
+        await assert.rejects(resolver.resolve('deepl'), ProviderNotConfiguredError);
+        await secrets.setApiKey('deepl', 'test-api-key');
+        assert.ok(await resolver.resolve('deepl') instanceof DeepLTranslationProvider);
     });
     test('Saved credentials do not make an unimplemented provider available', async () => {
         const secrets = new SecretManager(new FakeSecretStorage());

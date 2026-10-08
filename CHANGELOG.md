@@ -8,6 +8,11 @@ The project follows Semantic Versioning.
 
 ### Added
 
+- Functional DeepL provider using the official `deepl-node` SDK and `translateText()`
+- Registry-based DeepL language mapping with automatic source detection and US English target
+- Controlled DeepL authentication, quota, rate-limit, connection, service and language errors
+- Offline DeepL provider, credential, feature and OpenAI/DeepL cache-isolation tests
+
 - Functional OpenAI translation provider using the official SDK and non-streaming Responses API
 - Centralized `gpt-5.6-luna` model with reasoning disabled, text-only prompts and automatic/explicit source language
 - Controlled authentication, rate-limit, network, service and invalid-response errors
@@ -26,14 +31,14 @@ The project follows Semantic Versioning.
 
 ### Changed
 
-- OpenAI is selectable alongside mock; Google and DeepL remain planned
+- DeepL and OpenAI are selectable alongside mock; Google remains planned
 - Translation features and caches are renewed on provider configuration and credential changes without reloading VS Code
-- Cache keys include optional source language; each cache remains isolated to its provider lifetime
+- Cache keys include provider identity and optional source language; each cache remains isolated to its provider lifetime
 - Reused the bounded translation cache across hover and Markdown translation
 
 ### Planned
 
-- Google Cloud Translation and DeepL provider integration
+- Google Cloud Translation provider integration
 
 ## [0.1.0-alpha.4]
 

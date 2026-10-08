@@ -7,7 +7,7 @@ export class TranslationCache {
     constructor(private readonly service: TranslationService, private readonly capacity = 100) {}
 
     translate(text: string, targetLanguage: string, sourceLanguage?: string): Promise<string> {
-        const key = JSON.stringify([text, targetLanguage, sourceLanguage]);
+        const key = JSON.stringify([this.service.providerId, text, targetLanguage, sourceLanguage]);
         const existing = this.entries.get(key);
         if (existing) {
             return existing;
