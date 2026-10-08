@@ -49,6 +49,27 @@
         "command": "devlingo.changeTranslationProvider",
         "title": "Change Translation Provider",
         "category": "DevLingo"
+      },
+      {
+        "command": "devlingo.open",
+        "title": "DevLingo: Open",
+        "icon": "$(globe)",
+        "shortTitle": "DevLingo"
+      },
+      {
+        "command": "devlingo.changeTargetLanguage",
+        "title": "Change Target Language",
+        "category": "DevLingo"
+      },
+      {
+        "command": "devlingo.toggleCommentTranslation",
+        "title": "Toggle Comment Translation",
+        "category": "DevLingo"
+      },
+      {
+        "command": "devlingo.openSettings",
+        "title": "Open Settings",
+        "category": "DevLingo"
       }
     ],
     "configuration": {
@@ -88,8 +109,34 @@
           "default": "mock",
           "scope": "application",
           "description": "Translation provider. Mock is available offline; Google Cloud Translation, DeepL and OpenAI use your API key."
+        },
+        "devlingo.commentTranslationEnabled": {
+          "type": "boolean",
+          "default": true,
+          "scope": "application",
+          "description": "Enable translation of code comments on hover."
         }
       }
+    },
+    "menus": {
+      "editor/title": [
+        {
+          "command": "devlingo.open",
+          "group": "navigation@20"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "devlingo.translateSelection",
+          "when": "editorHasSelection",
+          "group": "8_devlingo@1"
+        },
+        {
+          "command": "devlingo.translateMarkdown",
+          "when": "resourceLangId == markdown",
+          "group": "8_devlingo@2"
+        }
+      ]
     }
   },
   "scripts": {

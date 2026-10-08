@@ -29,3 +29,21 @@ export function onTranslationProviderChanged(listener: () => void): vscode.Dispo
         }
     });
 }
+
+export async function setTargetLanguage(code: string): Promise<void> {
+    if (!languages.some(language => language.code === code)) {
+        throw new Error('DevLingo: Unsupported target language.');
+    }
+    const configuration = vscode.workspace.getConfiguration(namespace);
+    const target = configuration.inspect('targetLanguage')?.workspaceValue !== undefined
+        ? vscode.ConfigurationTarget.Workspace : vscode.ConfigurationTarget.Global;
+    await configuration.update('targetLanguage', code, target);
+}
+
+export function isCommentTranslationEnabled(): boolean {
+    return vscode.workspace.getConfiguration(namespace).get<boolean>('commentTranslationEnabled', true);
+}
+
+export async function setCommentTranslationEnabled(enabled: boolean): Promise<void> {
+    await vscode.workspace.getConfiguration(namespace).update('commentTranslationEnabled', enabled, vscode.ConfigurationTarget.Global);
+}

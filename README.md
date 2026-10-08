@@ -28,6 +28,20 @@ const user = await getCurrentUser();
 
 Hovering over the comment can display its translation directly inside VS Code.
 
+## Native command center
+
+Click the **globe icon** in the editor title toolbar, or run **DevLingo: Open** from the Command Palette. This opens a native QuickPick; opening it never translates automatically. The built-in Codicon follows VS Code themes. The action is contributed directly to `editor/title` in `navigation@20`; it does not depend on editor focus or a document language.
+
+The menu shows **Translate Selection** only when non-whitespace text is selected and **Translate Markdown File** only for Markdown documents. Configuration items show the current target language, provider and comment translation state, followed by credential configuration and native DevLingo Settings. Escape closes the menu without side effects. All actions are keyboard accessible and existing translation commands are reused.
+
+**Target Language** opens the centralized language picker and marks the current language. Choosing a different language updates `devlingo.targetLanguage` without a notification; an existing workspace override is updated at workspace scope so it takes effect. **Translation Provider** opens the existing provider selector; missing credentials are shown as **API key required**, and the resolver offers the existing secure configuration command. The menu only receives a boolean credential-status reader and never retrieves keys.
+
+**Comment Translation** toggles `devlingo.commentTranslationEnabled` (default `true`). Disabled hover returns no translation and starts no provider request, including suppressing a pending result if disabled while it is loading. Re-enabling takes effect without reloading. **DevLingo Settings** opens native VS Code Settings filtered to `devlingo`.
+
+Right-click selected text for **DevLingo: Translate Selection**, or right-click a Markdown document for **DevLingo: Translate Markdown File**. The Command Palette also exposes **Change Target Language**, **Toggle Comment Translation**, **Configure Provider API Key**, **Remove Provider API Key** and the existing provider selector. No sidebar, WebView or permanent status-bar item is added.
+
+For a visual check, launch the Extension Development Host with `F5`: verify the globe on TypeScript and Markdown editors, select and clear text to check menu actions, change the language/provider and reopen the menu, toggle comment translation and hover a comment, then open Settings and try the context-menu translation actions. Test credential input only with your own key; it remains masked and stored in SecretStorage. Automated tests cover native command routing and configuration behavior. The toolbar and command center were visually checked in an isolated Extension Development Host with Markdown and TypeScript editors; real cloud translation still requires your own provider credentials.
+
 ## Goals
 
 DevLingo is built around a simple idea: developers should be able to understand documentation and source-code comments without constantly switching between their editor and external translation tools.

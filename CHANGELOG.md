@@ -8,6 +8,12 @@ The project follows Semantic Versioning.
 
 ### Added
 
+- Native DevLingo command center launched from a theme-aware globe icon in the editor title toolbar
+- Context-aware QuickPick actions and editor context menus that reuse existing translation commands
+- Target-language picker, native settings shortcut and visible provider credential state
+- Configurable comment translation toggle, enabled by default, that suppresses inactive and pending hover results
+- Command-center construction, routing, cancellation, settings and hover-toggle tests
+
 - Google Cloud Translation Basic v2 provider using the official `@google-cloud/translate` SDK
 - API-key injection through the existing SecretStorage resolver and provider commands
 - Plain-text translation with automatic or explicit source language
