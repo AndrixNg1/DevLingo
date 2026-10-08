@@ -1,6 +1,7 @@
 {
   "name": "devlingo",
   "displayName": "DevLingo",
+  "license": "MIT",
   "description": "Translate Markdown files and code comments directly in VS Code.",
   "version": "0.1.0-alpha.5",
   "engines": {

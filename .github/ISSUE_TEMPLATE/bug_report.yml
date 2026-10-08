@@ -1,0 +1,66 @@
+name: Bug report
+description: Report a reproducible DevLingo problem.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: "Never include API keys, access tokens, credentials or private source content. Redact logs before submitting. For vulnerabilities, read SECURITY.md instead."
+  - type: input
+    id: devlingo_version
+    attributes:
+      label: DevLingo version
+    validations:
+      required: true
+  - type: input
+    id: vscode_version
+    attributes:
+      label: VS Code version
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system and version
+    validations:
+      required: true
+  - type: dropdown
+    id: provider
+    attributes:
+      label: Provider
+      options:
+        - DeepL
+        - OpenAI
+        - Google Cloud Translation
+        - Not applicable
+    validations:
+      required: true
+  - type: input
+    id: target
+    attributes:
+      label: Target language
+      description: Include the language code when applicable.
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Include a minimal non-confidential example and the command or hover action.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: Optional. Remove credentials, tokens, personal information and private content.
+      render: text

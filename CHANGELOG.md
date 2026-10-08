@@ -8,6 +8,13 @@ The project follows Semantic Versioning.
 
 ### Added
 
+- Open-source contributor documentation and development/packaging guide
+- Architecture, provider and Markdown translation documentation
+- GitHub bug/feature issue forms and pull request template
+- MIT license and package license metadata, approved by the maintainer
+- Security policy, code of conduct and roadmap
+- Manual demo recording script and asset guidance
+
 - Native DevLingo command center launched from a theme-aware globe icon in the editor title toolbar
 - Context-aware QuickPick actions and editor context menus that reuse existing translation commands
 - Target-language picker, native settings shortcut and visible provider credential state
@@ -42,6 +49,11 @@ The project follows Semantic Versioning.
 - Markdown, filename, filesystem and command integration tests
 
 ### Changed
+
+- Rewritten user-facing README with current provider, credential and installation guidance
+- Removed Mock from the extension; DeepL is the default and fixtures remain test-only
+- Distinguish OpenAI exhausted credits/quota from temporary rate limits
+- Added isolated extension debugging and disabled debugger Network view
 
 - Google Cloud Translation, DeepL and OpenAI are selectable alongside mock
 - Translation features and caches are renewed on provider configuration and credential changes without reloading VS Code
