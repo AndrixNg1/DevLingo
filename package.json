@@ -34,6 +34,21 @@
         "command": "devlingo.translateMarkdown",
         "title": "Translate Markdown File",
         "category": "DevLingo"
+      },
+      {
+        "command": "devlingo.configureProviderApiKey",
+        "title": "Configure Provider API Key",
+        "category": "DevLingo"
+      },
+      {
+        "command": "devlingo.removeProviderApiKey",
+        "title": "Remove Provider API Key",
+        "category": "DevLingo"
+      },
+      {
+        "command": "devlingo.changeTranslationProvider",
+        "title": "Change Translation Provider",
+        "category": "DevLingo"
       }
     ],
     "configuration": {
@@ -55,6 +70,18 @@
           ],
           "default": "fr",
           "description": "Default target language for comment hover and Markdown file translations."
+        },
+        "devlingo.translationProvider": {
+          "type": "string",
+          "enum": [
+            "mock"
+          ],
+          "enumDescriptions": [
+            "Mock Provider (Development). Cloud providers are planned and unavailable."
+          ],
+          "default": "mock",
+          "scope": "application",
+          "description": "Translation provider. Only the development mock is implemented. Cloud API keys can be prepared through DevLingo commands but do not activate cloud translation."
         }
       }
     }

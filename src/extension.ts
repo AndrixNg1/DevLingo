@@ -1,16 +1,11 @@
 import * as vscode from 'vscode';
-import { MarkdownTranslator } from './markdown/markdownTranslator';
-import { registerTranslateMarkdownCommand } from './commands/translateMarkdown';
-import { registerTranslateSelectionCommand } from './commands/translateSelection';
-import { registerCommentTranslationHover } from './hover/commentTranslationHover';
-import { MockTranslationProvider } from './translation/providers/mockTranslationProvider';
-import { TranslationService } from './translation/translationService';
+import { registerProviderCommands } from './commands/providerCommands';
+import { SecretManager } from './config/secrets';
+import { ProviderResolver } from './translation/providers/providerResolver';
+import { registerTranslationFeatures } from './translation/registerTranslationFeatures';
 
-export function activate(context: vscode.ExtensionContext): void {
-    const service = new TranslationService(new MockTranslationProvider());
-    context.subscriptions.push(
-        registerTranslateSelectionCommand(service),
-        registerTranslateMarkdownCommand(new MarkdownTranslator(service)),
-        registerCommentTranslationHover(service),
-    );
+export async function activate(context: vscode.ExtensionContext): Promise<void> {
+    const secrets = new SecretManager(context.secrets);
+    const resolver = new ProviderResolver(secrets);
+    context.subscriptions.push(registerProviderCommands(secrets), await registerTranslationFeatures(resolver));
 }
