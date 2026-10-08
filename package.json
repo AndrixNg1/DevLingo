@@ -95,20 +95,18 @@
         "devlingo.translationProvider": {
           "type": "string",
           "enum": [
-            "mock",
             "google",
             "deepl",
             "openai"
           ],
           "enumDescriptions": [
-            "Mock Provider (Development). No external requests.",
             "Google Cloud Translation Basic v2. Requires an API key stored through DevLingo commands.",
             "DeepL cloud translation. Requires an API key stored through DevLingo commands.",
             "OpenAI cloud translation. Requires an API key stored through DevLingo commands."
           ],
-          "default": "mock",
+          "default": "deepl",
           "scope": "application",
-          "description": "Translation provider. Mock is available offline; Google Cloud Translation, DeepL and OpenAI use your API key."
+          "description": "Translation provider. DeepL, Google Cloud Translation and OpenAI require your API key."
         },
         "devlingo.commentTranslationEnabled": {
           "type": "boolean",

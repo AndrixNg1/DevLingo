@@ -3,10 +3,10 @@ import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import { MarkdownTranslator } from '../markdown/markdownTranslator';
 import { TranslationService } from '../translation/translationService';
-import { MockTranslationProvider } from '../translation/providers/mockTranslationProvider';
+import { FixtureTranslationProvider } from './helpers/fixtureTranslationProvider';
 
 suite('Markdown translator', () => {
-    const translator = () => new MarkdownTranslator(new TranslationService(new MockTranslationProvider()));
+    const translator = () => new MarkdownTranslator(new TranslationService(new FixtureTranslationProvider()));
     const prefix = '\\[fr\\] ';
     const examples: [string, string, string][] = [
         ['paragraph', 'DevLingo helps developers.', `${prefix}DevLingo helps developers.`],

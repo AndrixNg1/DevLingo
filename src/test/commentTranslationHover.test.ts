@@ -1,8 +1,8 @@
 import * as assert from 'assert';
 import * as vscode from 'vscode';
-import { CommentTranslationHover } from '../hover/commentTranslationHover';
+import { CommentTranslationHover, registerCommentTranslationHover } from '../hover/commentTranslationHover';
 import { TranslationService } from '../translation/translationService';
-import { MockTranslationProvider } from '../translation/providers/mockTranslationProvider';
+import { FixtureTranslationProvider } from './helpers/fixtureTranslationProvider';
 import { getTargetLanguage } from '../config/settings';
 import { languages } from '../config/languages';
 import { commentLanguageIds } from '../comments/commentExtractor';
@@ -33,10 +33,10 @@ suite('Comment translation hover', function () {
 
     test('Translates through the service, caches requests and preserves the document', async () => {
         let calls = 0;
-        const mock = new MockTranslationProvider();
+        const fixture = new FixtureTranslationProvider();
         const hover = new CommentTranslationHover(new TranslationService({ async translate(text, options) {
             calls++;
-            return mock.translate(text, options);
+            return fixture.translate(text, options);
         } }));
         const document = await vscode.workspace.openTextDocument({ content: '// Fetch current user', language: 'typescript' });
         const token = new vscode.CancellationTokenSource();
@@ -168,13 +168,18 @@ suite('Comment translation hover', function () {
         const extension = vscode.extensions.all.find(item => item.packageJSON.name === 'devlingo');
         assert.ok(extension);
         await extension.activate();
-        const document = await vscode.workspace.openTextDocument({ content: '// Registered hover', language: 'typescript' });
-        const results = await vscode.commands.executeCommand<vscode.Hover[]>(
-            'vscode.executeHoverProvider', document.uri, new vscode.Position(0, 5),
-        );
-        assert.ok(results?.some(result => result.contents.some(content =>
-            content instanceof vscode.MarkdownString && content.value.includes('**DevLingo**')
-            && content.value.includes('Registered') && content.value.includes('hover'),
-        )));
+        const registration = registerCommentTranslationHover(new TranslationService(new FixtureTranslationProvider()));
+        try {
+            const document = await vscode.workspace.openTextDocument({ content: '// Registered hover', language: 'typescript' });
+            const results = await vscode.commands.executeCommand<vscode.Hover[]>(
+                'vscode.executeHoverProvider', document.uri, new vscode.Position(0, 5),
+            );
+            assert.ok(results?.some(result => result.contents.some(content =>
+                content instanceof vscode.MarkdownString && content.value.includes('**DevLingo**')
+                && content.value.includes('Registered') && content.value.includes('hover'),
+            )));
+        } finally {
+            registration.dispose();
+        }
     });
 });

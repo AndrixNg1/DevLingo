@@ -2,8 +2,6 @@ import * as assert from 'assert';
 import { ProviderResolver, ProviderNotAvailableError, UnknownTranslationProviderError, ProviderNotConfiguredError } from '../translation/providers/providerResolver';
 import { SecretManager } from '../config/secrets';
 import { FakeSecretStorage } from './helpers/fakeSecretStorage';
-import { MockTranslationProvider } from '../translation/providers/mockTranslationProvider';
-import { TranslationService } from '../translation/translationService';
 import { DeepLTranslationProvider } from '../translation/providers/deeplTranslationProvider';
 import { OpenAITranslationProvider } from '../translation/providers/openaiTranslationProvider';
 import { GoogleTranslationProvider } from '../translation/providers/googleTranslationProvider';
@@ -11,11 +9,6 @@ import { getCredentialProviders } from '../translation/providers/providerRegistr
 
 suite('Provider resolver', () => {
     const create = () => new ProviderResolver(new SecretManager(new FakeSecretStorage()));
-    test('Resolves the mock and integrates with the existing translation service', async () => {
-        const provider = await create().resolve('mock');
-        assert.ok(provider instanceof MockTranslationProvider);
-        assert.strictEqual(await new TranslationService(provider).translate('Hello world', { targetLanguage: 'fr' }), '[fr] Hello world');
-    });
     for (const provider of getCredentialProviders()) {
         test(`Rejects ${provider.id} without credentials or falling back`, async () => {
             const resolver = new ProviderResolver(new SecretManager({
@@ -31,7 +24,7 @@ suite('Provider resolver', () => {
             });
         });
     }
-    test('Requires a nonempty OpenAI key without falling back to mock', async () => {
+    test('Requires a nonempty OpenAI key without falling back', async () => {
         const storage = new FakeSecretStorage();
         const secrets = new SecretManager(storage);
         const resolver = new ProviderResolver(secrets);
@@ -62,7 +55,7 @@ suite('Provider resolver', () => {
         assert.ok(await resolver.resolve('google') instanceof GoogleTranslationProvider);
     });
     test('Rejects unknown configurations without reflecting arbitrary values', async () => {
-        for (const id of ['invalid', '__proto__', 'test-api-key', null, 1, {}]) {
+        for (const id of ['mock', 'invalid', '__proto__', 'test-api-key', null, 1, {}]) {
             await assert.rejects(create().resolve(id), (error: unknown) => {
                 assert.ok(error instanceof UnknownTranslationProviderError);
                 assert.ok(!error.message.includes('test-api-key'));

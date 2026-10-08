@@ -4,7 +4,6 @@ import { GoogleTranslationProvider } from './googleTranslationProvider';
 import { DeepLTranslationProvider } from './deeplTranslationProvider';
 import { OpenAITranslationProvider } from './openaiTranslationProvider';
 import type { TranslationProvider } from '../types';
-import { MockTranslationProvider } from './mockTranslationProvider';
 import { getProviderMetadata, isTranslationProviderId, type TranslationProviderId } from './providerRegistry';
 
 export class ProviderNotAvailableError extends TranslationError {
@@ -45,7 +44,6 @@ export class ProviderResolver {
             throw new ProviderNotConfiguredError(providerId);
         }
         switch (providerId) {
-            case 'mock': return new MockTranslationProvider();
             case 'google': return new GoogleTranslationProvider({ apiKey: apiKey! });
             case 'deepl': return new DeepLTranslationProvider({ apiKey: apiKey! });
             case 'openai': return new OpenAITranslationProvider({ apiKey: apiKey! });

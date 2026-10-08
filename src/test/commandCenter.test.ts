@@ -32,7 +32,7 @@ suite('DevLingo command center', () => {
             const items = actions({ ...state, targetLanguage: language.code });
             assert.strictEqual(items.find(item => item.command === 'devlingo.changeTargetLanguage')?.description, `${language.label} (${language.code.toUpperCase()})`);
         }
-        for (const providerId of ['mock', 'openai', 'deepl', 'google'] as const) {
+        for (const providerId of ['openai', 'deepl', 'google'] as const) {
             const items = actions({ ...state, providerId, credentialStatus: 'configured' });
             assert.strictEqual(items.find(item => item.command === 'devlingo.changeTranslationProvider')?.description, getProviderMetadata(providerId).displayName);
         }
@@ -79,7 +79,7 @@ suite('DevLingo native UX routing and settings', () => {
         await extension.activate();
     });
     setup(() => {
-        providerId = 'mock'; targetLanguage = 'fr'; enabled = true; editor = undefined; workspaceTarget = undefined;
+        providerId = 'google'; targetLanguage = 'fr'; enabled = true; editor = undefined; workspaceTarget = undefined;
         menu = []; updates = []; executed = []; selected = undefined; picks = undefined;
         override(vscode.window, 'activeTextEditor', editor);
         override(vscode.workspace, 'getConfiguration', () => ({
@@ -102,12 +102,12 @@ suite('DevLingo native UX routing and settings', () => {
         const reads: string[] = [];
         const hasKey = async (id: string) => { reads.push(id); return false; };
         await openCommandCenter(hasKey);
-        assert.deepStrictEqual(reads, []);
+        assert.deepStrictEqual(reads, ['google']);
         assert.strictEqual(picks?.title, 'DevLingo');
         assert.deepStrictEqual(executed, []);
         providerId = 'deepl'; targetLanguage = 'de'; enabled = false;
         await openCommandCenter(hasKey);
-        assert.deepStrictEqual(reads, ['deepl']);
+        assert.deepStrictEqual(reads, ['google', 'deepl']);
         assert.ok(menu.find(item => item.command === 'devlingo.changeTranslationProvider')?.description?.includes('DeepL · API key required'));
         assert.strictEqual(menu.find(item => item.command === 'devlingo.changeTargetLanguage')?.description, 'German (DE)');
         assert.strictEqual(menu.find(item => item.command === 'devlingo.toggleCommentTranslation')?.description, 'Disabled');

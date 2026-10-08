@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import { TranslationCache } from '../translation/translationCache';
 import { TranslationService } from '../translation/translationService';
-import { MockTranslationProvider } from '../translation/providers/mockTranslationProvider';
+import { FixtureTranslationProvider } from './helpers/fixtureTranslationProvider';
 
 suite('Hover translation cache', () => {
     test('Reuses pending and completed requests', async () => {
@@ -22,10 +22,10 @@ suite('Hover translation cache', () => {
     });
     test('Separates original text and target language', async () => {
         let calls = 0;
-        const mock = new MockTranslationProvider();
+        const fixture = new FixtureTranslationProvider();
         const cache = new TranslationCache(new TranslationService({ async translate(text, options) {
             calls++;
-            return mock.translate(text, options);
+            return fixture.translate(text, options);
         } }));
         assert.strictEqual(await cache.translate('Hello', 'fr'), '[fr] Hello');
         assert.strictEqual(await cache.translate('Hello', 'de'), '[de] Hello');

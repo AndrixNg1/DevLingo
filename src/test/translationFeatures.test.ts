@@ -5,7 +5,6 @@ import { ProviderResolver, ProviderNotConfiguredError } from '../translation/pro
 import { GoogleTranslationProvider } from '../translation/providers/googleTranslationProvider';
 import { DeepLTranslationProvider } from '../translation/providers/deeplTranslationProvider';
 import { OpenAITranslationProvider } from '../translation/providers/openaiTranslationProvider';
-import { MockTranslationProvider } from '../translation/providers/mockTranslationProvider';
 import { registerTranslationFeatures } from '../translation/registerTranslationFeatures';
 import { FakeSecretStorage } from './helpers/fakeSecretStorage';
 
@@ -45,7 +44,7 @@ suite('Translation feature provider and credential lifetimes (offline)', () => {
             get: key => storage.get(key), store: (key, value) => storage.store(key, value),
             delete: key => storage.delete(key), onDidChange: secretEvents.event,
         });
-        selected = 'mock'; calls = 0; hovers = []; commands = new Map(); notifications = [];
+        selected = 'deepl'; calls = 0; hovers = []; commands = new Map(); notifications = [];
         override(vscode.workspace, 'getConfiguration', () => ({ get: (key: string, fallback: unknown) => key === 'translationProvider' ? selected : fallback }));
         override(vscode.workspace, 'onDidChangeConfiguration', configEvents.event);
         override(vscode.commands, 'registerCommand', (id: string, callback: (...args: unknown[]) => unknown) => {
@@ -67,8 +66,8 @@ suite('Translation feature provider and credential lifetimes (offline)', () => {
     });
     class OfflineResolver extends ProviderResolver {
         override async resolve(id: unknown) {
-            if (id === 'mock') {
-                return new MockTranslationProvider();
+            if (!['google', 'deepl', 'openai'].includes(String(id))) {
+                return super.resolve(id);
             }
             const cloudId = id === 'google' ? 'google' : id === 'deepl' ? 'deepl' : 'openai';
             const apiKey = await secrets.getApiKey(cloudId);
@@ -99,6 +98,32 @@ suite('Translation feature provider and credential lifetimes (offline)', () => {
         }
         assert.ok(hovers.length > previousCount, 'Feature registration must refresh');
     }
+    test('Invalid and removed providers discard cached translations and recover after selecting DeepL', async () => {
+        await secrets.setApiKey('deepl', 'test-api-key');
+        registration = await registerTranslationFeatures(new OfflineResolver(secrets), secrets);
+        const document = await vscode.workspace.openTextDocument({ content: '// Hello', language: 'typescript' });
+        const cancellation = new vscode.CancellationTokenSource();
+        const hover = () => hovers.at(-1)!.provideHover(document, new vscode.Position(0, 4), cancellation.token);
+        try {
+            assert.ok(await hover());
+            for (const invalid of ['invalid-provider', 'mock']) {
+                selected = invalid;
+                let count = hovers.length;
+                configEvents.fire({ affectsConfiguration: () => true });
+                await settleRegistration(count);
+                assert.strictEqual(await hover(), undefined);
+                selected = 'deepl';
+                count = hovers.length;
+                configEvents.fire({ affectsConfiguration: () => true });
+                await settleRegistration(count);
+                assert.ok(await hover());
+            }
+            assert.strictEqual(calls, 3);
+            assert.ok(notifications.some(message => message.includes('Unknown translation provider')));
+        } finally {
+            cancellation.dispose();
+        }
+    });
     test('Switching OpenAI to DeepL and back discards cached results from the previous provider', async () => {
         await secrets.setApiKey('openai', 'test-api-key');
         await secrets.setApiKey('deepl', 'test-other-key');
@@ -130,7 +155,8 @@ suite('Translation feature provider and credential lifetimes (offline)', () => {
         }
     });
     for (const cloudId of ['openai', 'deepl', 'google'] as const) {
-        test(`Switches mock/${cloudId} without stale hover cache and refreshes saved, replaced and deleted keys`, async () => {
+        test(`Refreshes ${cloudId} hover cache after saved, replaced and deleted keys`, async () => {
+            selected = cloudId;
             registration = await registerTranslationFeatures(new OfflineResolver(secrets), secrets);
             const document = await vscode.workspace.openTextDocument({ content: '// Hello', language: 'typescript' });
             const cancellation = new vscode.CancellationTokenSource();
@@ -139,11 +165,7 @@ suite('Translation feature provider and credential lifetimes (offline)', () => {
                 return (result?.contents[0] as vscode.MarkdownString | undefined)?.value;
             };
             try {
-                assert.ok((await hoverText())?.includes('Hello'));
-                selected = cloudId;
                 let count = hovers.length;
-                configEvents.fire({ affectsConfiguration: () => true });
-                await settleRegistration(count);
                 assert.strictEqual(await hoverText(), undefined);
                 assert.ok(notifications.some(message => message.includes('requires an API key')));
                 await secrets.setApiKey(cloudId, 'test-api-key');
@@ -164,11 +186,12 @@ suite('Translation feature provider and credential lifetimes (offline)', () => {
                 secretEvents.fire({ key: `devlingo.provider.${cloudId}.apiKey` });
                 await settleRegistration(count);
                 assert.strictEqual(await hoverText(), undefined);
-                selected = 'mock'; count = hovers.length;
-                configEvents.fire({ affectsConfiguration: () => true });
+                await secrets.setApiKey(cloudId, 'test-restored-key');
+                count = hovers.length;
+                secretEvents.fire({ key: `devlingo.provider.${cloudId}.apiKey` });
                 await settleRegistration(count);
-                assert.ok((await hoverText())?.includes('Hello'));
-                assert.strictEqual(calls, 2);
+                assert.ok((await hoverText())?.includes('Bonjour'));
+                assert.strictEqual(calls, 3);
             } finally {
                 cancellation.dispose();
             }

@@ -26,7 +26,7 @@ export async function registerTranslationFeatures(resolver: ProviderResolver, se
             if (disposed || currentRevision !== revision) {
                 return;
             }
-            // Keep commands registered, but never translate using a silent mock fallback.
+            // Keep commands registered, but never translate using a silent fallback.
             provider = { async translate() { throw error; } };
             const message = error instanceof ProviderNotAvailableError || error instanceof ProviderNotConfiguredError
                 || error instanceof UnknownTranslationProviderError

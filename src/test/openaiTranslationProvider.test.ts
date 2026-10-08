@@ -6,7 +6,7 @@ import { OpenAITranslationProvider, OPENAI_TRANSLATION_MODEL, type OpenAITransla
 import { TranslationService } from '../translation/translationService';
 import { TranslationCache } from '../translation/translationCache';
 import { TranslationError, translationErrorMessage } from '../translation/translationError';
-import { MockTranslationProvider } from '../translation/providers/mockTranslationProvider';
+import { FixtureTranslationProvider } from './helpers/fixtureTranslationProvider';
 import { MarkdownTranslator } from '../markdown/markdownTranslator';
 import { CommentTranslationHover } from '../hover/commentTranslationHover';
 
@@ -115,7 +115,7 @@ suite('OpenAI translation provider (offline)', () => {
     });
     test('Reuses requests and isolates source languages and provider lifetimes', async () => {
         const cache = new TranslationCache(new TranslationService(provider));
-        const mockCache = new TranslationCache(new TranslationService(new MockTranslationProvider()));
+        const fixtureCache = new TranslationCache(new TranslationService(new FixtureTranslationProvider()));
         const first = cache.translate('Hello', 'fr', 'en');
         assert.strictEqual(cache.translate('Hello', 'fr', 'en'), first);
         assert.strictEqual(await first, 'Bonjour');
@@ -123,7 +123,7 @@ suite('OpenAI translation provider (offline)', () => {
         assert.strictEqual(requests.length, 1);
         await cache.translate('Hello', 'fr', 'de');
         assert.strictEqual(requests.length, 2);
-        assert.strictEqual(await mockCache.translate('Hello', 'fr'), '[fr] Hello');
+        assert.strictEqual(await fixtureCache.translate('Hello', 'fr'), '[fr] Hello');
     });
     test('Markdown passes only prose and preserves protected syntax through the existing pipeline', async () => {
         const translator = new MarkdownTranslator(new TranslationService(provider));

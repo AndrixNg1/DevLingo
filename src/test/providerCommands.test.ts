@@ -40,7 +40,7 @@ suite('Provider commands and settings', function () {
             return items.find(item => item.label === choose);
         });
         override(vscode.window, 'showInputBox', async (options: vscode.InputBoxOptions) => { inputOptions = options; return input; });
-        await setTranslationProvider('mock');
+        await setTranslationProvider('deepl');
     });
     teardown(async () => {
         await vscode.workspace.getConfiguration('devlingo').update('translationProvider', savedProvider, vscode.ConfigurationTarget.Global);
@@ -58,7 +58,7 @@ suite('Provider commands and settings', function () {
             assert.ok(commands.includes(`devlingo.${id}`));
         }
         const properties = extension.packageJSON.contributes.configuration.properties;
-        assert.strictEqual(properties['devlingo.translationProvider'].default, 'mock');
+        assert.strictEqual(properties['devlingo.translationProvider'].default, 'deepl');
         assert.deepStrictEqual(properties['devlingo.translationProvider'].enum, getAvailableProviders().map(provider => provider.id));
         assert.strictEqual(properties['devlingo.translationProvider'].scope, 'application');
         assert.ok(Object.keys(properties).every(key => !/apiKey|credential|secret/i.test(key)));
@@ -78,7 +78,7 @@ suite('Provider commands and settings', function () {
         assert.strictEqual(storage.values.get(getProviderSecretKey('google')), 'test-api-key');
         assert.ok(info[0].includes('credentials saved'));
         assert.ok(!info.join(' ').includes('test-api-key'));
-        assert.strictEqual(getTranslationProvider(), 'mock');
+        assert.strictEqual(getTranslationProvider(), 'deepl');
     });
     test('Configures DeepL credentials through the existing secure command', async () => {
         choose = 'DeepL'; input = ' test-api-key ';
@@ -103,7 +103,7 @@ suite('Provider commands and settings', function () {
         choose = 'OpenAI'; input = '  ';
         await configureProviderApiKey(secrets);
         assert.strictEqual(storage.values.size, 0);
-        assert.ok(errors[0].includes('Unable to save'));
+        assert.ok(errors.some(message => message.includes('Unable to save')));
     });
     test('Removes only configured credentials, without showing their values', async () => {
         await secrets.setApiKey('google', 'test-api-key');
@@ -135,51 +135,27 @@ suite('Provider commands and settings', function () {
     });
     test('Only allows selection of available providers and keeps cancellation safe', async () => {
         await changeTranslationProvider();
-        assert.deepStrictEqual(choices.map(item => item.label), ['Mock Provider (Development)', 'Google Cloud Translation', 'DeepL', 'OpenAI']);
+        assert.deepStrictEqual(choices.map(item => item.label), ['Google Cloud Translation', 'DeepL', 'OpenAI']);
         assert.strictEqual(info.length, 0);
-        choose = 'Mock Provider (Development)';
+        choose = 'DeepL';
         await changeTranslationProvider();
-        assert.strictEqual(getTranslationProvider(), 'mock');
+        assert.strictEqual(getTranslationProvider(), 'deepl');
         assert.ok(info[0].includes('selected'));
     });
     test('Rejects unavailable/unknown provider configuration without changing the setting', async () => {
         for (const id of ['unknown', '__proto__']) {
             await assert.rejects(setTranslationProvider(id as TranslationProviderId), /not available/);
-            assert.strictEqual(getTranslationProvider(), 'mock');
+            assert.strictEqual(getTranslationProvider(), 'deepl');
         }
     });
-    test('Does not silently substitute mock for a manually configured invalid values', async () => {
+    test('Does not silently substitute a provider for a manually configured invalid values', async () => {
         await vscode.workspace.getConfiguration('devlingo').update('translationProvider', 'invalid-provider', vscode.ConfigurationTarget.Global);
         assert.strictEqual(getTranslationProvider(), 'invalid-provider');
         await vscode.workspace.getConfiguration('devlingo').update('translationProvider', 'unknown', vscode.ConfigurationTarget.Global);
         assert.strictEqual(getTranslationProvider(), 'unknown');
     });
-    test('Discards old hover cache after an invalid provider is configured and recovers after selecting mock', async () => {
-        const extension = vscode.extensions.all.find(item => item.packageJSON.name === 'devlingo');
-        assert.ok(extension);
-        await extension.activate();
-        const document = await vscode.workspace.openTextDocument({ content: '// Provider cache regression', language: 'typescript' });
-        const hover = () => vscode.commands.executeCommand<vscode.Hover[]>(
-            'vscode.executeHoverProvider', document.uri, new vscode.Position(0, 5),
-        );
-        const hasTranslation = (results: vscode.Hover[] | undefined) => results?.some(result => result.contents.some(content =>
-            content instanceof vscode.MarkdownString && content.value.includes('**DevLingo**'),
-        ));
-        assert.ok(hasTranslation(await hover()));
-        await vscode.workspace.getConfiguration('devlingo').update('translationProvider', 'invalid-provider', vscode.ConfigurationTarget.Global);
-        // Configuration change handlers resolve providers asynchronously.
-        for (let attempt = 0; attempt < 40 && !errors.some(message => message.includes('Unknown translation provider')); attempt++) {
-            await new Promise(resolve => setTimeout(resolve, 25));
-        }
-        assert.ok(errors.some(message => message.includes('Unknown translation provider')));
-        assert.ok(!hasTranslation(await hover()), 'A cached mock result must not mask an invalid provider configuration');
-        await setTranslationProvider('mock');
-        for (let attempt = 0; attempt < 40; attempt++) {
-            if (hasTranslation(await hover())) {
-                return;
-            }
-            await new Promise(resolve => setTimeout(resolve, 25));
-        }
-        assert.fail('Mock hover must recover without reloading the extension');
+    test('Rejects the removed provider instead of silently selecting a cloud provider', async () => {
+        await assert.rejects(setTranslationProvider('mock' as TranslationProviderId), /not available/);
+        assert.strictEqual(getTranslationProvider(), 'deepl');
     });
 });

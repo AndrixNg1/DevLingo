@@ -12,7 +12,7 @@ export function getTargetLanguage(): string {
 
 /** Keep invalid/unknown selections visible to the resolver rather than falling back. */
 export function getTranslationProvider(): unknown {
-    return vscode.workspace.getConfiguration(namespace).get<unknown>(providerSetting, 'mock');
+    return vscode.workspace.getConfiguration(namespace).get<unknown>(providerSetting, 'deepl');
 }
 
 export async function setTranslationProvider(providerId: TranslationProviderId): Promise<void> {

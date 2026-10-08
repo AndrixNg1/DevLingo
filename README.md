@@ -59,21 +59,21 @@ The project focuses on:
 
 DevLingo is currently under active development.
 
-DevLingo supports OpenAI, DeepL and Google Cloud Translation using your own API key, alongside an offline development mock. Mock remains the default; no text is sent to a cloud provider until that provider is selected.
+DevLingo supports OpenAI, DeepL and Google Cloud Translation using your own API key. DeepL is the default; translation requires credentials for the selected provider.
 
-To try it, press `F5`, select text in the Extension Development Host, and run **DevLingo: Translate Selection** from the Command Palette. Choose English, French, Spanish, or German. The mock result (for example, `[fr] Hello world`) opens in a temporary document beside the original without modifying it.
+To try it, configure your DeepL API key using **DevLingo: Configure Provider API Key** in the Extension Development Host launched with `F5`, then select text in the Extension Development Host, and run **DevLingo: Translate Selection** from the Command Palette. Choose English, French, Spanish, or German. The translated result opens in a temporary document beside the original without modifying it.
 
 `TranslationService` depends only on `TranslationProvider`. Provider metadata and construction live in `src/translation/providers/`. Future providers can be added to the registry and resolver without changing selection, hover, Markdown translation or cache logic.
 
 ### Provider infrastructure and credentials
 
-`devlingo.translationProvider` defaults to `mock`. **DevLingo: Change Translation Provider** offers **Mock Provider (Development)**, **Google Cloud Translation**, **DeepL**, and **OpenAI**.
+`devlingo.translationProvider` defaults to `deepl`. **DevLingo: Change Translation Provider** offers **Google Cloud Translation**, **DeepL**, and **OpenAI**. Configure the selected provider's API key before translating. Existing settings selecting the removed `mock` provider must be changed using this command.
 
 Use **DevLingo: Configure Provider API Key**, choose **OpenAI**, and enter your key in the masked input. Keys are trimmed and saved only through VS Code SecretStorage, under `devlingo.provider.<providerId>.apiKey`. Empty keys are rejected. Keys are never placed in settings, logged, displayed after storage or prefilled in the input. Saving a key does not perform remote validation or select a provider.
 
 **DevLingo: Remove Provider API Key** lists only providers with saved credentials and deletes the chosen entry without showing its value. Tests use in-memory storage and fake cloud-provider clients, without real API requests or credentials.
 
-Selecting a cloud provider without a key blocks translation with a controlled error and offers the existing configuration command. Unknown and unavailable providers never fall back to mock. Changing providers or saved credentials rebuilds translation features and caches without a reload, so stale results and old keys cannot mask the new configuration. Each cache belongs to a single provider lifetime and includes provider ID, text, target language and optional source language; pending requests are shared and failed requests can be retried.
+Selecting a cloud provider without a key blocks translation with a controlled error and offers the existing configuration command. Unknown and unavailable providers never fall back to another provider. Changing providers or saved credentials rebuilds translation features and caches without a reload, so stale results and old keys cannot mask the new configuration. Each cache belongs to a single provider lifetime and includes provider ID, text, target language and optional source language; pending requests are shared and failed requests can be retried.
 
 ### Try OpenAI translation
 

@@ -6,7 +6,7 @@ import * as vscode from 'vscode';
 import { translateMarkdownFile } from '../commands/translateMarkdown';
 import { MarkdownTranslator } from '../markdown/markdownTranslator';
 import { TranslationService } from '../translation/translationService';
-import { MockTranslationProvider } from '../translation/providers/mockTranslationProvider';
+import { FixtureTranslationProvider } from './helpers/fixtureTranslationProvider';
 
 suite('Translate Markdown command', function () {
     this.timeout(15000);
@@ -36,7 +36,7 @@ suite('Translate Markdown command', function () {
             uri: untitled ? vscode.Uri.parse('untitled:Untitled-1') : vscode.Uri.file(path.join(directory, 'README.md')),
         } });
     }
-    const mockTranslator = () => new MarkdownTranslator(new TranslationService(new MockTranslationProvider()));
+    const fixtureTranslator = () => new MarkdownTranslator(new TranslationService(new FixtureTranslationProvider()));
     setup(async () => {
         directory = await fs.mkdtemp(path.join(os.tmpdir(), 'devlingo-command-'));
         warnings = []; errors = []; successes = []; opened = []; choice = undefined; progressCount = 0;
@@ -61,7 +61,7 @@ suite('Translate Markdown command', function () {
     });
     test('Warns without an active editor', async () => {
         override(vscode.window, 'activeTextEditor', undefined);
-        await translateMarkdownFile(mockTranslator());
+        await translateMarkdownFile(fixtureTranslator());
         assert.ok(warnings[0].includes('Open a Markdown file'));
         assert.strictEqual(progressCount, 0);
     });
@@ -79,7 +79,7 @@ suite('Translate Markdown command', function () {
         const original = '# DevLingo\n\n```bash\nnpm install\n```';
         await fs.writeFile(path.join(directory, 'README.md'), original);
         active(original);
-        await translateMarkdownFile(mockTranslator());
+        await translateMarkdownFile(fixtureTranslator());
         assert.strictEqual(await fs.readFile(path.join(directory, 'README.md'), 'utf8'), original);
         const translated = await fs.readFile(path.join(directory, 'README.fr.md'), 'utf8');
         assert.strictEqual(translated, '# \\[fr\\] DevLingo\n\n```bash\nnpm install\n```');
@@ -91,7 +91,7 @@ suite('Translate Markdown command', function () {
     test('Uses the configured target language', async () => {
         await vscode.workspace.getConfiguration('devlingo').update('targetLanguage', 'de', vscode.ConfigurationTarget.Global);
         active('Hello');
-        await translateMarkdownFile(mockTranslator());
+        await translateMarkdownFile(fixtureTranslator());
         assert.strictEqual(await fs.readFile(path.join(directory, 'README.de.md'), 'utf8'), '\\[de\\] Hello');
     });
     test('Cancels an existing output without translating or writing', async () => {
@@ -110,7 +110,7 @@ suite('Translate Markdown command', function () {
         await fs.writeFile(target, 'Existing');
         active('Hello');
         choice = 'Replace';
-        await translateMarkdownFile(mockTranslator());
+        await translateMarkdownFile(fixtureTranslator());
         assert.strictEqual(await fs.readFile(target, 'utf8'), '\\[fr\\] Hello');
         assert.ok(warnings[0].includes('already exists'));
     });
@@ -134,7 +134,7 @@ suite('Translate Markdown command', function () {
         override(vscode.workspace, 'textDocuments', [{ uri: vscode.Uri.file(target), isDirty: true }]);
         active('Hello');
         choice = 'Replace';
-        await translateMarkdownFile(mockTranslator());
+        await translateMarkdownFile(fixtureTranslator());
         assert.strictEqual(await fs.readFile(target, 'utf8'), 'Existing');
         assert.ok(warnings[0].includes('unsaved translated file'));
     });
@@ -145,7 +145,7 @@ suite('Translate Markdown command', function () {
         await fs.symlink(target, original);
         active('Original');
         choice = 'Replace';
-        await translateMarkdownFile(mockTranslator());
+        await translateMarkdownFile(fixtureTranslator());
         assert.strictEqual(await fs.readFile(original, 'utf8'), 'Original');
         assert.ok(warnings[0].includes('original file'));
         assert.deepStrictEqual(successes, []);
@@ -169,13 +169,13 @@ suite('Translate Markdown command', function () {
         const target = path.join(directory, 'README.fr.md');
         await fs.mkdir(target);
         choice = 'Replace';
-        await translateMarkdownFile(mockTranslator());
+        await translateMarkdownFile(fixtureTranslator());
         assert.ok(errors[0].includes('Unable to translate'));
         assert.deepStrictEqual(await fs.readdir(directory), ['README.fr.md']);
     });
     test('Safely publishes an empty document', async () => {
         active('');
-        await translateMarkdownFile(mockTranslator());
+        await translateMarkdownFile(fixtureTranslator());
         assert.strictEqual(await fs.readFile(path.join(directory, 'README.fr.md'), 'utf8'), '');
         assert.strictEqual(successes.length, 1);
     });

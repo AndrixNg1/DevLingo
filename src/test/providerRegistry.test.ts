@@ -3,7 +3,7 @@ import { providerRegistry, getProviderMetadata, getAvailableProviders, getCreden
 
 suite('Provider registry', () => {
     test('Defines stable IDs, centralized immutable metadata and availability', () => {
-        assert.deepStrictEqual(Object.keys(providerRegistry), ['mock', 'google', 'deepl', 'openai']);
+        assert.deepStrictEqual(Object.keys(providerRegistry), ['google', 'deepl', 'openai']);
         assert.ok(Object.isFrozen(providerRegistry));
         for (const provider of Object.values(providerRegistry)) {
             assert.strictEqual(getProviderMetadata(provider.id), provider);
@@ -11,18 +11,18 @@ suite('Provider registry', () => {
             assert.ok(provider.displayName.length > 0);
             assert.ok(provider.description.length > 0);
             assert.strictEqual(provider.available, true);
-            assert.strictEqual(provider.requiresApiKey, provider.id !== 'mock');
+            assert.strictEqual(provider.requiresApiKey, true);
         }
     });
     test('Exposes all implemented providers as available and cloud providers as requiring credentials', () => {
-        assert.deepStrictEqual(getAvailableProviders().map(provider => provider.id), ['mock', 'google', 'deepl', 'openai']);
+        assert.deepStrictEqual(getAvailableProviders().map(provider => provider.id), ['google', 'deepl', 'openai']);
         assert.deepStrictEqual(getCredentialProviders().map(provider => provider.id), ['google', 'deepl', 'openai']);
     });
     test('Rejects unknown, inherited and malformed provider identifiers', () => {
-        for (const value of ['mock', 'google', 'deepl', 'openai']) {
+        for (const value of ['google', 'deepl', 'openai']) {
             assert.ok(isTranslationProviderId(value));
         }
-        for (const value of ['Google', '', 'toString', '__proto__', null, undefined, 0, {}]) {
+        for (const value of ['mock', 'Google', '', 'toString', '__proto__', null, undefined, 0, {}]) {
             assert.strictEqual(isTranslationProviderId(value), false);
         }
     });
