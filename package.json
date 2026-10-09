@@ -1,9 +1,9 @@
 {
-  "name": "devlingo",
-  "displayName": "DevLingo",
+  "name": "devlingo-translate",
+  "displayName": "DevLingo Translate",
   "license": "MIT",
   "description": "Translate code comments, selected text and Markdown directly in VS Code.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "engines": {
     "vscode": "^1.140.0"
   },

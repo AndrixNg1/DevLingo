@@ -132,6 +132,15 @@ DevLingo follows the principle:
 
 ---
 
+## [1.0.1]
+
+### Changed
+
+- Changed the Marketplace extension identifier to `devlingo-translate` to avoid a naming conflict.
+- Updated the extension display name to `DevLingo Translate`.
+
+No runtime functionality changed.
+
 ## [0.1.0-alpha.5]
 
 Cloud translation providers milestone.
